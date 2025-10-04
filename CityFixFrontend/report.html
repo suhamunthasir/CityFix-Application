@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Problem - CityFix Sri Lanka</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">City<span>Fix</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="myReport.html">My Reports</a></li>
+                    <li><a href="#" class="active">Report a Problem</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <div class="user-avatar" id="user-avatar">
+                    <!-- User avatar will be populated by JavaScript -->
+                </div>
+                <span id="user-name">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Report a Problem in Your Area</h1>
+            <p>Help improve your community by reporting issues that need attention</p>
+        </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <div class="container">
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Location</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Photo</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Details</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-label">Confirmation</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Location Section -->
+            <section id="location-section" class="form-section active">
+                <h2>Pinpoint the Problem Location</h2>
+                
+                <div class="location-instructions">
+                    <p><strong>Instructions:</strong> Use the map below to pinpoint the exact location of the problem. You can:</p>
+                    <ul>
+                        <li>Drag the map to navigate to your area</li>
+                        <li>Use the search box to find a specific location</li>
+                        <li>Click on the map to place a marker at the problem location</li>
+                        <li>Use the "Use My Location" button to quickly find your current position</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group">
+                    <div class="location-search-container">
+                        <input type="text" id="location-search" placeholder="Search for a location in Sri Lanka...">
+                        <button type="button" id="search-location-btn">Search</button>
+                    </div>
+                    <button type="button" id="use-my-location" class="nav-button secondary" style="margin-top: 0.5rem; width: auto;">Use My Current Location</button>
+                </div>
+                
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location-notes">Additional Location Details (optional)</label>
+                    <textarea id="location-notes" placeholder="e.g., 'Near the bus stop on Galle Road', 'Next to the supermarket', etc."></textarea>
+                </div>
+                
+                <div class="form-navigation">
+                    <button type="button" class="nav-button secondary" disabled>Previous</button>
+                    <button type="button" class="nav-button" id="next-to-photo">Next: Add Photo</button>
+                </div>
+            </section>
+            
+            <!-- Photo Section -->
+            <section id="photo-section" class="form-section">
+                <h2>Add Photos (Optional but Helpful)</h2>
+                
+                <div class="location-instructions">
+                    <p><strong>Why add photos?</strong> Photos help authorities understand the problem better and can lead to faster resolution.</p>
+                </div>
+                
+                <div class="photo-upload-area" id="photo-upload-area">
+                    <i>📷</i>
+                    <p>Click here to upload photos or drag and drop them here</p>
+                    <input type="file" id="photo-input" accept="image/*" multiple style="display: none;">
+                </div>
+                
+                <div class="photo-preview" id="photo-preview">
+                    <!-- Photos will be added here dynamically -->
+                </div>
+                
+                <div class="form-navigation">
+                    <button type="button" class="nav-button secondary" id="back-to-location">Previous: Location</button>
+                    <button type="button" class="nav-button" id="next-to-details">Next: Problem Details</button>
+                </div>
+            </section>
+            
+            <!-- Details Section -->
+            <section id="details-section" class="form-section">
+                <h2>Describe the Problem</h2>
+                
+                <div class="form-group">
+                    <label>Problem Category</label>
+                    <div class="category-options">
+                        <div class="category-option" data-category="potholes">
+                            <i>🕳️</i>
+                            <span>Potholes</span>
+                        </div>
+                        <div class="category-option" data-category="streetlights">
+                            <i>💡</i>
+                            <span>Street Lights</span>
+                        </div>
+                        <div class="category-option" data-category="garbage">
+                            <i>🗑️</i>
+                            <span>Garbage Collection</span>
+                        </div>
+                        <div class="category-option" data-category="damage">
+                            <i>🏗️</i>
+                            <span>Damaged Property</span>
+                        </div>
+                        <div class="category-option" data-category="flooding">
+                            <i>🌊</i>
+                            <span>Flooding</span>
+                        </div>
+                        <div class="category-option" data-category="other">
+                            <i>❓</i>
+                            <span>Other Issues</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="problem-title">Problem Title</label>
+                    <input type="text" id="problem-title" placeholder="Brief description of the problem (e.g., 'Large pothole on Main Street')" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="problem-description">Detailed Description</label>
+                    <textarea id="problem-description" placeholder="Please provide as much detail as possible about the problem..." required></textarea>
+                </div>
+                
+                <div class="form-navigation">
+                    <button type="button" class="nav-button secondary" id="back-to-photo">Previous: Photo</button>
+                    <button type="button" class="nav-button" id="next-to-confirmation">Next: Confirmation</button>
+                </div>
+            </section>
+            
+            <!-- Confirmation Section -->
+            <section id="confirmation-section" class="form-section">
+                <h2>Confirm Your Report</h2>
+                
+                <div class="confirmation-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Location:</div>
+                        <div class="detail-value" id="confirm-location">Not set</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Category:</div>
+                        <div class="detail-value" id="confirm-category">Not selected</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Title:</div>
+                        <div class="detail-value" id="confirm-title">Not provided</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Description:</div>
+                        <div class="detail-value" id="confirm-description">Not provided</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Photos:</div>
+                        <div class="detail-value" id="confirm-photos">No photos added</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Privacy Settings</label>
+                    <div class="consent-options">
+                        <div class="consent-option" id="publicize-option">
+                            <input type="checkbox" id="publicize-issue">
+                            <label for="publicize-issue">Do you consent to publish this issue to the public?</label>
+                        </div>
+                        <div class="consent-option" id="showname-option">
+                            <input type="checkbox" id="show-name">
+                            <label for="show-name">Do you agree to show your name with this report?</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-navigation">
+                    <button type="button" class="nav-button secondary" id="back-to-details">Previous: Details</button>
+                    <button type="button" class="nav-button" id="submit-report">Submit Report</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
