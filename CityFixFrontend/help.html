@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & FAQ - CityFix Sri Lanka</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        
+        .logo span {
+            color: #e74c3c;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: #555;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e67e22;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background-color: #fff;
+            padding: 3rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+            background: linear-gradient(135deg, #fff9f2 0%, #ffffff 100%);
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .page-header p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+       
+        
+        /* Help Categories */
+        .help-categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff9f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: #e67e22;
+        }
+        
+        .category-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .category-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .category-link {
+            display: inline-block;
+            color: #e67e22;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .category-link:hover {
+            border-bottom: 1px solid #e67e22;
+        }
+        
+        /* FAQ Content */
+        .faq-content {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .faq-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .faq-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .faq-header p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .faq-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .faq-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .faq-item:hover {
+            border-color: #e0e0e0;
+        }
+        
+        .faq-question {
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .faq-question:after {
+            content: '+';
+            font-size: 1.5rem;
+            color: #666;
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-question:after {
+            content: '−';
+        }
+        
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 1000px;
+        }
+        
+        .faq-answer p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .faq-answer ul, .faq-answer ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        
+        .faq-answer li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #333 0%, #555 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .contact-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-section p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-option {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .contact-option:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-3px);
+        }
+        
+        .contact-option i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: #e67e22;
+        }
+        
+        .contact-option h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-option p {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .contact-button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        
+        .contact-button:hover {
+            background-color: #d35400;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.3rem;
+            }
+            
+            .page-header {
+                padding: 2rem 0;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .help-categories {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .faq-content {
+                padding: 2rem;
+            }
+            
+            .contact-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">City<span>Fix</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="signin.html">Sign In</a></li>
+                    <li><a href="allReport.html">All Reports</a></li>
+                    <li><a href="localReport.html">Local Reports</a></li>
+
+                    <li><a href="#" class="active">Help</a></li>
+                </ul>
+            </nav>
+         
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>How can we help you?</h1>
+            <p>Find answers to common questions or get in touch with our support team</p>
+         
+        </div>
+    </section>
+
+    <!-- Help Categories -->
+    <div class="container">
+        <div class="help-categories">
+            <div class="category-card">
+                <div class="category-icon">📝</div>
+                <h3>Reporting Issues</h3>
+                <p>Learn how to report problems in your area effectively</p>
+                <a href="#reporting" class="category-link">Browse Guides</a>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🔍</div>
+                <h3>Tracking Reports</h3>
+                <p>Find out how to monitor the status of your submissions</p>
+                <a href="#tracking" class="category-link">Learn More</a>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">👤</div>
+                <h3>Account Help</h3>
+                <p>Manage your account settings and preferences</p>
+                <a href="#account" class="category-link">Get Help</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Content -->
+    <div class="container">
+        <div class="faq-content">
+            <div class="faq-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Quick answers to the most common questions about CityFix</p>
+            </div>
+            
+            <!-- Reporting Issues Section -->
+            <section id="reporting" class="faq-section">
+                <h3>Reporting Issues</h3>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What types of problems can I report on CityFix?</div>
+                    <div class="faq-answer">
+                        <p>You can report various issues that fall under the responsibility of your local council, including:</p>
+                        <ul>
+                            <li><strong>Roads & Pavements:</strong> Potholes, damaged roads, broken pavements</li>
+                            <li><strong>Street Lighting:</strong> Broken or faulty street lights</li>
+                            <li><strong>Waste Management:</strong> Missed garbage collections, overflowing bins</li>
+                            <li><strong>Parks & Public Spaces:</strong> Damaged playground equipment, overgrown vegetation</li>
+                            <li><strong>Drainage & Flooding:</strong> Blocked drains, flooding issues</li>
+                        </ul>
+                        <p>If you're unsure whether a problem is appropriate for CityFix, please report it anyway - we'll make sure it reaches the right department.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How precise does my location need to be when reporting?</div>
+                    <div class="faq-answer">
+                        <p>The more precise your location, the easier it is for council workers to find and fix the problem. Here are some tips for accurate location reporting:</p>
+                        <ul>
+                            <li>Use the map to pinpoint the exact location of the problem</li>
+                            <li>Add descriptive details in the location field (e.g., "outside house number 25," "near the bus stop")</li>
+                            <li>If possible, include a photo that shows landmarks to help identify the location</li>
+                        </ul>
+                        <p>Don't worry if you can't be extremely precise - council workers are familiar with their areas and can usually find problems based on general descriptions.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Should I include photos with my report?</div>
+                    <div class="faq-answer">
+                        <p>Yes, photos are extremely helpful for several reasons:</p>
+                        <ul>
+                            <li>They help council workers identify the exact problem</li>
+                            <li>They provide evidence of the issue's severity</li>
+                            <li>They can help prioritize urgent problems</li>
+                            <li>They make it easier to verify when a problem has been fixed</li>
+                        </ul>
+                        <p>When taking photos:</p>
+                        <ul>
+                            <li>Try to capture the problem clearly</li>
+                            <li>Include some context (e.g., nearby landmarks)</li>
+                            <li>Take photos from different angles if helpful</li>
+                            <li>Ensure the photo is in focus and well-lit</li>
+                        </ul>
+                        <p>Photos are optional but strongly recommended for better results.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Tracking Reports Section -->
+            <section id="tracking" class="faq-section">
+                <h3>Tracking Reports</h3>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How can I track the status of my reports?</div>
+                    <div class="faq-answer">
+                        <p>You can track your reports in several ways:</p>
+                        <ol>
+                            <li><strong>My Reports Dashboard:</strong> Log in to your account and visit the "My Reports" section to see all your submissions and their current status.</li>
+                            <li><strong>Email Updates:</strong> We'll send you email notifications when there are updates on your reports.</li>
+                            <li><strong>Report Page:</strong> Each report has its own page where you can see updates and comments from the council.</li>
+                        </ol>
+                        <p>Reports typically go through these stages: Submitted → Acknowledged → In Progress → Fixed → Closed.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How long does it take for problems to get fixed?</div>
+                    <div class="faq-answer">
+                        <p>The time it takes to fix a problem varies depending on several factors:</p>
+                        <ul>
+                            <li><strong>Type of problem:</strong> Some issues (like dangerous potholes) are prioritized over others</li>
+                            <li><strong>Council resources:</strong> Different councils have different response times</li>
+                            <li><strong>Severity:</strong> More serious problems tend to get faster responses</li>
+                            <li><strong>Weather conditions:</strong> Some repairs depend on suitable weather</li>
+                        </ul>
+                        <p>Most councils aim to acknowledge reports within 3-5 working days. You can check typical response times for your local council on their website.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What should I do if my report hasn't been addressed?</div>
+                    <div class="faq-answer">
+                        <p>If your report seems to be taking longer than expected, here are some steps you can take:</p>
+                        <ol>
+                            <li><strong>Check for updates:</strong> Log in to your account and check if there are any updates on your report page.</li>
+                            <li><strong>Add more information:</strong> If you have additional details or photos, add them to your report to help the council.</li>
+                            <li><strong>Contact the council directly:</strong> Use the contact information on the report page to follow up with the relevant department.</li>
+                            <li><strong>Escalate if necessary:</strong> If the problem is dangerous and hasn't been addressed, you can contact your local councillor.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Account Help Section -->
+            <section id="account" class="faq-section">
+                <h3>Account Help</h3>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Do I need an account to report problems?</div>
+                    <div class="faq-answer">
+                        <p>Yes, you need to create a CityFix account to report problems. Having an account offers several benefits:</p>
+                        <ul>
+                            <li>Track the status of your reports</li>
+                            <li>Receive email updates when there's progress on your reports</li>
+                            <li>Save your location preferences</li>
+                            <li>Easily submit multiple reports</li>
+                            <li>Manage your notification settings</li>
+                        </ul>
+                        <p>Creating an account is quick, free, and requires only an email address.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How do I reset my password?</div>
+                    <div class="faq-answer">
+                        <p>If you've forgotten your password, you can reset it easily:</p>
+                        <ol>
+                            <li>Go to the Sign In page</li>
+                            <li>Click on "Forgot your password?"</li>
+                            <li>Enter the email address associated with your account</li>
+                            <li>Check your email for a password reset link</li>
+                            <li>Click the link and follow the instructions to create a new password</li>
+                        </ol>
+                        <p>If you don't receive the password reset email within a few minutes, check your spam folder. If you still can't find it, please contact our support team.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Can I change my email address or personal details?</div>
+                    <div class="faq-answer">
+                        <p>Yes, you can update your account information at any time:</p>
+                        <ol>
+                            <li>Sign in to your CityFix account</li>
+                            <li>Click on your profile name in the top right corner</li>
+                            <li>Select "Account Settings" from the dropdown menu</li>
+                            <li>Update your email address, name, or other details</li>
+                            <li>Click "Save Changes" to confirm</li>
+                        </ol>
+                        <p>If you change your email address, we'll send a confirmation email to the new address to verify it.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Contact Section -->
+            <section class="contact-section">
+                <h2>Still need help?</h2>
+                <p>Can't find what you're looking for? Our support team is here to help you.</p>
+                
+                <div class="contact-options">
+                    <div class="contact-option">
+                        <i>📧</i>
+                        <h3>Email Support</h3>
+                        <p>Send us an email and we'll respond within 24 hours</p>
+                        <a href="mailto:support@cityfix.lk" class="contact-button">Email Us</a>
+                    </div>
+                    <div class="contact-option">
+                        <i>📞</i>
+                        <h3>Phone Support</h3>
+                        <p>Call our support line during business hours</p>
+                        <a href="tel:+94112345678" class="contact-button">Call Now</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open clicked item if it wasn't already active
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+        
+      
+        
+        // Smooth scrolling for category links
+        document.querySelectorAll('.category-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

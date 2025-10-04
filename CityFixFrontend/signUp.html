@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityFix - Sign Up</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fff4e6; /* light orange background */
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #333; /* dark grey */
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e67e22; /* orange */
+        }
+        
+        .logo span {
+            color: #e74c3c; /* red */
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #555; /* lighter grey */
+        }
+        
+        /* Auth Form Styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 2rem 0;
+        }
+        
+        .auth-box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .auth-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .auth-subtitle {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+        
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #e67e22; /* orange */
+            outline: none;
+        }
+        
+        .auth-button {
+            width: 100%;
+            background-color: #e67e22; /* orange */
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-button:hover {
+            background-color: #d35400; /* darker orange */
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+        
+        .auth-switch a {
+            color: #e67e22; /* orange */
+            font-weight: 500;
+        }
+        
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #e74c3c; /* red */
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .password-toggle {
+            position: relative;
+        }
+        
+        .password-toggle input {
+            padding-right: 40px;
+        }
+        
+        .toggle-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333; /* dark grey */
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        #profilePreview {
+         transition: 0.3s ease;
+        }
+
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            .auth-box {
+                padding: 1.5rem;
+                margin: 0 1rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+    <div class="container header-container">
+        <div class="logo">City<span>Fix</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="signIn.html" class="nav-link">Sign In</a></li>
+                <li><a href="allReport.html" class="nav-link">All Reports</a></li>
+                <li><a href="localReport.html" class="nav-link">Local Reports</a></li>
+                <li><a href="help.html" class="nav-link">Help</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section class="auth-container">
+    <div class="auth-box">
+        <h2 class="auth-title">Create a CityFix Account</h2>
+        <p class="auth-subtitle">Join the community to report and help fix local problems</p>
+        
+        <form id="signUpForm" enctype="multipart/form-data">
+            <div class="form-group full-width">
+                <label for="profilePicture">Profile Picture</label>
+                <input type="file" id="profilePicture" accept="image/*">
+                <div style="margin-top:10px; text-align:center;">
+                    <img id="profilePreview" src="" alt="Preview" style="max-width:120px; max-height:120px; border-radius:50%; display:none; border:2px solid #e67e22; padding:2px;">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" placeholder="Enter your first name" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" placeholder="Enter your last name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" placeholder="Enter your Address" required>
+            </div>
+            <div class="form-group">
+                <label for="nic">NIC Number</label>
+                <input type="text" id="nic" placeholder="Enter your NIC number" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" required>
+            </div>
+            <div class="form-group password-toggle">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password" required>
+                <span class="toggle-icon" id="togglePassword">👁️</span>
+            </div>
+            <div class="form-group password-toggle">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                <span class="toggle-icon" id="toggleConfirmPassword">👁️</span>
+            </div>
+            
+            <button type="submit" class="auth-button">Create Account</button>
+        </form>
+        
+        <div class="auth-switch">
+            Already have an account? <a href="signIn.html">Sign In</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+const profileInput = document.getElementById('profilePicture');
+const profilePreview = document.getElementById('profilePreview');
+
+profileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            profilePreview.style.display = 'block';
+            profilePreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    } else {
+        profilePreview.style.display = 'none';
+    }
+});
+
+function setupPasswordToggle(passwordFieldId, toggleIconId) {
+    const passwordField = document.getElementById(passwordFieldId);
+    const toggleIcon = document.getElementById(toggleIconId);
+    toggleIcon.addEventListener('click', function() {
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.textContent = '🔒';
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.textContent = '👁️';
+        }
+    });
+}
+setupPasswordToggle('password', 'togglePassword');
+setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+
+document.getElementById('signUpForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Collect form values
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const address = document.getElementById('address').value;
+    const nic = document.getElementById('nic').value;
+    const dob = document.getElementById('dob').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Basic validation
+    if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+    }
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("address", address);
+    formData.append("nic", nic);
+    formData.append("dob", dob);
+    formData.append("password", password);
+
+    if (profileInput.files[0]) {
+        formData.append("profilePicture", profileInput.files[0]);
+    }
+
+    fetch("http://localhost:8080/api/citizens/signup", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(res => {
+        alert(res.message || 'Account created successfully!');
+        window.location.href = 'signIn.html';
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        alert('Failed to create account. Please try again.');
+    });
+});
+</script>
+</body>
+</html>

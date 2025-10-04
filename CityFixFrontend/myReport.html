@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports - CityFix Sri Lanka</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        
+        .logo span {
+            color: #e74c3c;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: #555;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e67e22;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background-color: #fff;
+            padding: 2rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .page-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .page-header p {
+            color: #666;
+            max-width: 700px;
+        }
+        
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .stat-open {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .stat-progress {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .stat-fixed {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .stat-closed {
+            border-left: 4px solid #95a5a6;
+        }
+        
+        /* Filter and Search */
+        .reports-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .filter-button {
+            background: none;
+            border: 1px solid #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-button.active {
+            background-color: #e67e22;
+            color: white;
+            border-color: #e67e22;
+        }
+        
+        .search-box {
+            display: flex;
+        }
+        
+        .search-box input {
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px 0 0 4px;
+            width: 250px;
+        }
+        
+        .search-box button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        /* Reports List */
+        .reports-list {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .report-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .report-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .report-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-meta {
+            display: flex;
+            gap: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .report-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-open {
+            background-color: #ffeaa7;
+            color: #d35400;
+        }
+        
+        .status-in-progress {
+            background-color: #a29bfe;
+            color: #2d3436;
+        }
+        
+        .status-fixed {
+            background-color: #55efc4;
+            color: #00b894;
+        }
+        
+        .status-closed {
+            background-color: #dfe6e9;
+            color: #636e72;
+        }
+        
+        .report-content {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .report-image {
+            flex: 0 0 150px;
+            height: 100px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .report-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .report-details {
+            flex: 1;
+        }
+        
+        .report-description {
+            color: #555;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-button {
+            background: none;
+            border: 1px solid #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .action-button.primary {
+            background-color: #e67e22;
+            color: white;
+            border-color: #e67e22;
+        }
+        
+        .action-button:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-button.primary:hover {
+            background-color: #d35400;
+        }
+        
+        /* Progress Tracking */
+        .progress-tracking {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-steps:before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .step-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        .progress-step.completed .step-icon {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .progress-step.active .step-icon {
+            background-color: #e67e22;
+            color: white;
+        }
+        
+        .update-item {
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .update-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .update-content {
+            color: #333;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: #ddd;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.3rem;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .reports-controls {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .filter-options {
+                flex-wrap: wrap;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .report-header {
+                flex-direction: column;
+            }
+            
+            .report-content {
+                flex-direction: column;
+            }
+            
+            .report-image {
+                flex: 1;
+                height: 150px;
+            }
+            
+            .progress-steps {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .progress-steps:before {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">City<span>Fix</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                   
+                   
+                   
+                    <li><a href="#" class="active">My Reports</a></li>
+                    <li><a href="report.html">Report a Problem</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <div class="user-avatar">JS</div>
+                <span>John Smith</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>My Reported Issues</h1>
+            <p>Track the status of problems you've reported and see updates from authorities</p>
+        </div>
+    </section>
+
+    <!-- Dashboard Stats -->
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card stat-open">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Open Reports</div>
+            </div>
+            <div class="stat-card stat-progress">
+                <div class="stat-number">5</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card stat-fixed">
+                <div class="stat-number">23</div>
+                <div class="stat-label">Fixed</div>
+            </div>
+            <div class="stat-card stat-closed">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Closed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Controls -->
+    <div class="container">
+        <div class="reports-controls">
+            <div class="filter-options">
+                <button class="filter-button active" data-filter="all">All Reports</button>
+                <button class="filter-button" data-filter="open">Open</button>
+                <button class="filter-button" data-filter="progress">In Progress</button>
+                <button class="filter-button" data-filter="fixed">Fixed</button>
+                <button class="filter-button" data-filter="closed">Closed</button>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search my reports...">
+                <button>Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports List -->
+    <div class="container">
+        <div class="reports-list">
+            <!-- Report Item 1 -->
+            <div class="report-item" data-status="progress">
+                <div class="report-header">
+                    <div>
+                        <h3 class="report-title">Large pothole on Galle Road, Colombo 03</h3>
+                        <div class="report-meta">
+                            <span>Reported: 3 days ago</span>
+                            <span>Category: Potholes</span>
+                            <span>Reference: #CF20231201</span>
+                        </div>
+                    </div>
+                    <span class="report-status status-in-progress">In Progress</span>
+                </div>
+                <div class="report-content">
+                    <div class="report-image">
+                        <img src="https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Pothole">
+                    </div>
+                    <div class="report-details">
+                        <p class="report-description">A large pothole has developed near the junction of Galle Road and Hospital Lane. It's causing traffic delays and is dangerous for motorcyclists.</p>
+                        <div class="progress-tracking">
+                            <div class="progress-steps">
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Reported</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Acknowledged</div>
+                                </div>
+                                <div class="progress-step active">
+                                    <div class="step-icon">!</div>
+                                    <div class="step-label">In Progress</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-icon">○</div>
+                                    <div class="step-label">Fixed</div>
+                                </div>
+                            </div>
+                            <div class="update-item">
+                                <div class="update-meta">
+                                    <span>Colombo Municipal Council</span>
+                                    <span>2 days ago</span>
+                                </div>
+                                <div class="update-content">Our team has inspected the site and repair work is scheduled for next week.</div>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="action-button primary">View Details</button>
+                            <button class="action-button">Add Update</button>
+                            <button class="action-button">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Report Item 2 -->
+            <div class="report-item" data-status="fixed">
+                <div class="report-header">
+                    <div>
+                        <h3 class="report-title">Street light not working on Park Street</h3>
+                        <div class="report-meta">
+                            <span>Reported: 2 weeks ago</span>
+                            <span>Category: Street Lights</span>
+                            <span>Reference: #CF20231125</span>
+                        </div>
+                    </div>
+                    <span class="report-status status-fixed">Fixed</span>
+                </div>
+                <div class="report-content">
+                    <div class="report-image">
+                        <img src="https://images.unsplash.com/photo-1517400508447-f8dd518b86db?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Street Light">
+                    </div>
+                    <div class="report-details">
+                        <p class="report-description">The street light near the Park Street junction has been out for over a week, making the area unsafe at night.</p>
+                        <div class="progress-tracking">
+                            <div class="progress-steps">
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Reported</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Acknowledged</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">In Progress</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Fixed</div>
+                                </div>
+                            </div>
+                            <div class="update-item">
+                                <div class="update-meta">
+                                    <span>CEB Maintenance</span>
+                                    <span>5 days ago</span>
+                                </div>
+                                <div class="update-content">The faulty street light has been repaired and is now functioning properly.</div>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="action-button primary">View Details</button>
+                            <button class="action-button">Confirm Fix</button>
+                            <button class="action-button">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Report Item 3 -->
+            <div class="report-item" data-status="open">
+                <div class="report-header">
+                    <div>
+                        <h3 class="report-title">Garbage not collected for 5 days in Kandy</h3>
+                        <div class="report-meta">
+                            <span>Reported: 1 day ago</span>
+                            <span>Category: Garbage Collection</span>
+                            <span>Reference: #CF20231202</span>
+                        </div>
+                    </div>
+                    <span class="report-status status-open">Open</span>
+                </div>
+                <div class="report-content">
+                    <div class="report-image">
+                        <img src="https://images.unsplash.com/photo-1587332219075-67c8c9770045?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Garbage">
+                    </div>
+                    <div class="report-details">
+                        <p class="report-description">Garbage has been piling up on Dalada Veediya for 5 days without collection, causing odor and attracting animals.</p>
+                        <div class="progress-tracking">
+                            <div class="progress-steps">
+                                <div class="progress-step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Reported</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-icon">○</div>
+                                    <div class="step-label">Acknowledged</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-icon">○</div>
+                                    <div class="step-label">In Progress</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-icon">○</div>
+                                    <div class="step-label">Fixed</div>
+                                </div>
+                            </div>
+                            <div class="update-item">
+                                <div class="update-meta">
+                                    <span>System</span>
+                                    <span>1 day ago</span>
+                                </div>
+                                <div class="update-content">Your report has been received and will be forwarded to the Kandy Municipal Council.</div>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="action-button primary">View Details</button>
+                            <button class="action-button">Add Update</button>
+                            <button class="action-button">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Empty State (hidden by default) -->
+        <div class="reports-list" id="empty-state" style="display: none;">
+            <div class="empty-state">
+                <i>📝</i>
+                <h3>No reports found</h3>
+                <p>You haven't submitted any reports yet, or no reports match your current filters.</p>
+                <a href="report-problem.html" class="action-button primary" style="display: inline-block; margin-top: 1rem;">Report Your First Problem</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Filter functionality
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active button
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                const reportItems = document.querySelectorAll('.report-item');
+                let visibleItems = 0;
+                
+                // Show/hide items based on filter
+                reportItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-status') === filter) {
+                        item.style.display = 'block';
+                        visibleItems++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Show empty state if no items visible
+                const emptyState = document.getElementById('empty-state');
+                if (visibleItems === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'none';
+                }
+            });
+        });
+        
+        // Search functionality
+        document.querySelector('.search-box button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
+            const reportItems = document.querySelectorAll('.report-item');
+            let visibleItems = 0;
+            
+            reportItems.forEach(item => {
+                const title = item.querySelector('.report-title').textContent.toLowerCase();
+                const description = item.querySelector('.report-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    visibleItems++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Show empty state if no items visible
+            const emptyState = document.getElementById('empty-state');
+            if (visibleItems === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        });
+        
+        // Allow pressing Enter to search
+        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-box button').click();
+            }
+        });
+        
+        // Action button functionality
+        document.querySelectorAll('.action-button.primary').forEach(button => {
+            button.addEventListener('click', function() {
+                const reportTitle = this.closest('.report-item').querySelector('.report-title').textContent;
+                alert(`Viewing details for: ${reportTitle}`);
+                // In a real implementation, this would navigate to the report details page
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Reports - CityFix Sri Lanka</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        
+        .logo span {
+            color: #e74c3c;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #555;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background-color: #fff;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: #666;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            margin: 2rem 0;
+            gap: 2rem;
+        }
+        
+        /* Filters Sidebar */
+        .filters-sidebar {
+            flex: 0 0 280px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        
+        .filters-sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-group h3 {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .filter-option input {
+            margin-right: 0.5rem;
+        }
+        
+        .filter-option label {
+            cursor: pointer;
+        }
+        
+        .filter-button {
+            width: 100%;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .filter-button:hover {
+            background-color: #d35400;
+        }
+        
+        /* Reports List */
+        .reports-list {
+            flex: 1;
+        }
+        
+        .reports-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .view-toggle {
+            display: flex;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .view-toggle button {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .view-toggle button.active {
+            background-color: #e67e22;
+            color: white;
+        }
+        
+        .sort-options select {
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        
+        .report-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        
+        .report-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .report-image {
+            flex: 0 0 120px;
+            height: 90px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-right: 1.5rem;
+        }
+        
+        .report-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .report-content {
+            flex: 1;
+        }
+        
+        .report-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .report-meta {
+            display: flex;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-meta span {
+            margin-right: 1rem;
+        }
+        
+        .report-description {
+            color: #555;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .report-status {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-open {
+            background-color: #ffeaa7;
+            color: #d35400;
+        }
+        
+        .status-in-progress {
+            background-color: #a29bfe;
+            color: #2d3436;
+        }
+        
+        .status-fixed {
+            background-color: #55efc4;
+            color: #00b894;
+        }
+        
+        .status-closed {
+            background-color: #dfe6e9;
+            color: #636e72;
+        }
+        
+        /* Map View */
+        .map-view {
+            display: none;
+            height: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .pagination button {
+            background: none;
+            border: 1px solid #e0e0e0;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .pagination button.active {
+            background-color: #e67e22;
+            color: white;
+            border-color: #e67e22;
+        }
+        
+        .pagination button:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .filters-sidebar {
+                flex: 1;
+                margin-bottom: 1rem;
+            }
+            
+            .reports-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .view-toggle {
+                margin-bottom: 1rem;
+            }
+            
+            .report-item {
+                flex-direction: column;
+            }
+            
+            .report-image {
+                flex: 1;
+                margin-right: 0;
+                margin-bottom: 1rem;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">City<span>Fix</span></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="signin.html">Sign In</a></li>
+
+                    <li><a href="#" class="active">All Reports</a></li>
+                    <li><a href="localReport.html">Local Reports</a></li>
+                    <li><a href="help.html">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>All Reports in Sri Lanka</h1>
+            <p>Browse and search for problems reported by citizens across Sri Lanka</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Filters Sidebar -->
+            <aside class="filters-sidebar">
+                <h2>Filter Reports</h2>
+                
+                <div class="filter-group">
+                    <h3>Status</h3>
+                    <div class="filter-option">
+                        <input type="checkbox" id="status-open" checked>
+                        <label for="status-open">Open</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="status-in-progress" checked>
+                        <label for="status-in-progress">In Progress</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="status-fixed" checked>
+                        <label for="status-fixed">Fixed</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="status-closed">
+                        <label for="status-closed">Closed</label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Category</h3>
+                    <div class="filter-option">
+                        <input type="checkbox" id="category-potholes" checked>
+                        <label for="category-potholes">Potholes</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="category-streetlights" checked>
+                        <label for="category-streetlights">Street Lights</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="category-garbage" checked>
+                        <label for="category-garbage">Garbage Collection</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="category-damage" checked>
+                        <label for="category-damage">Damaged Property</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="category-flooding" checked>
+                        <label for="category-flooding">Flooding</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="category-other" checked>
+                        <label for="category-other">Other Issues</label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Location</h3>
+                    <div class="filter-option">
+                        <input type="text" placeholder="Enter location" style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Date Range</h3>
+                    <div class="filter-option">
+                        <label for="date-from">From:</label>
+                        <input type="date" id="date-from" style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px; margin-top: 0.5rem;">
+                    </div>
+                    <div class="filter-option">
+                        <label for="date-to">To:</label>
+                        <input type="date" id="date-to" style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px; margin-top: 0.5rem;">
+                    </div>
+                </div>
+                
+                <button class="filter-button">Apply Filters</button>
+            </aside>
+            
+            <!-- Reports List/Map View -->
+            <main class="reports-list">
+                <div class="reports-controls">
+                    <div class="view-toggle">
+                        <button class="active" id="list-view">List View</button>
+                        <button id="map-view">Map View</button>
+                    </div>
+                    
+                    <div class="sort-options">
+                        <select id="sort-by">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="updated">Recently Updated</option>
+                            <option value="nearby">Nearby First</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- List View -->
+                <div id="list-view-content">
+                    <!-- Report Item 1 -->
+                    <div class="report-item">
+                        <div class="report-image">
+                            <img src="C:\Users\suham\Downloads\CityFix Pictures\pothole.jpg" alt="Pothole">
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">Large pothole on Galle Road, Colombo 03</h3>
+                            <div class="report-meta">
+                                <span>Reported: 2 hours ago</span>
+                                <span>Location: Colombo 03</span>
+                                <span>Category: Potholes</span>
+                            </div>
+                            <p class="report-description">A large pothole has developed near the junction of Galle Road and Hospital Lane. It's causing traffic delays and is dangerous for motorcyclists.</p>
+                            <span class="report-status status-open">Open</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Report Item 2 -->
+                    <div class="report-item">
+                        <div class="report-image">
+                            <img src="C:\Users\suham\Downloads\CityFix Pictures\streetlight.jpg" alt="Street Light">
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">Street light not working on Park Street, Colombo 02</h3>
+                            <div class="report-meta">
+                                <span>Reported: 1 day ago</span>
+                                <span>Location: Colombo 02</span>
+                                <span>Category: Street Lights</span>
+                            </div>
+                            <p class="report-description">The street light near the Park Street junction has been out for over a week, making the area unsafe at night.</p>
+                            <span class="report-status status-in-progress">In Progress</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Report Item 3 -->
+                    <div class="report-item">
+                        <div class="report-image">
+                            <img src="C:\Users\suham\Downloads\CityFix Pictures\garbage.jpg" alt="Garbage">
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">Garbage not collected for 5 days in Kandy</h3>
+                            <div class="report-meta">
+                                <span>Reported: 3 days ago</span>
+                                <span>Location: Kandy</span>
+                                <span>Category: Garbage Collection</span>
+                            </div>
+                            <p class="report-description">Garbage has been piling up on Dalada Veediya for 5 days without collection, causing odor and attracting animals.</p>
+                            <span class="report-status status-open">Open</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Report Item 4 -->
+                    <div class="report-item">
+                        <div class="report-image">
+                            <img src="C:\Users\suham\Downloads\CityFix Pictures\footbridge broken.jpg" alt="Damaged Property">
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">Broken footbridge in Dehiwala</h3>
+                            <div class="report-meta">
+                                <span>Reported: 5 days ago</span>
+                                <span>Location: Dehiwala</span>
+                                <span>Category: Damaged Property</span>
+                            </div>
+                            <p class="report-description">The footbridge near the Dehiwala railway station has broken handrails, posing a safety risk to pedestrians.</p>
+                            <span class="report-status status-fixed">Fixed</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Report Item 5 -->
+                    <div class="report-item">
+                        <div class="report-image">
+                            <img src="C:\Users\suham\Downloads\CityFix Pictures\flooded road.jpg" alt="Flooding">
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">Road flooding during rain in Negombo</h3>
+                            <div class="report-meta">
+                                <span>Reported: 1 week ago</span>
+                                <span>Location: Negombo</span>
+                                <span>Category: Flooding</span>
+                            </div>
+                            <p class="report-description">The road near St. Mary's Church floods even during light rain, making it difficult for pedestrians and vehicles.</p>
+                            <span class="report-status status-in-progress">In Progress</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map View -->
+                <div class="map-view" id="map-view-content">
+                    <div id="map"></div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>4</button>
+                    <button>5</button>
+                    <button>Next</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Toggle between list and map view
+        document.getElementById('list-view').addEventListener('click', function() {
+            document.getElementById('list-view').classList.add('active');
+            document.getElementById('map-view').classList.remove('active');
+            document.getElementById('list-view-content').style.display = 'block';
+            document.getElementById('map-view-content').style.display = 'none';
+        });
+        
+        document.getElementById('map-view').addEventListener('click', function() {
+            document.getElementById('map-view').classList.add('active');
+            document.getElementById('list-view').classList.remove('active');
+            document.getElementById('list-view-content').style.display = 'none';
+            document.getElementById('map-view-content').style.display = 'block';
+            initMap();
+        });
+        
+        // Initialize map (only when needed)
+        function initMap() {
+            // Check if map is already initialized
+            if (document.getElementById('map').hasChildNodes()) return;
+            
+            // Create map centered on Sri Lanka
+            const map = L.map('map').setView([7.8731, 80.7718], 8);
+            
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Add sample markers for reports
+            const reports = [
+                {
+                    position: [6.9271, 79.8612],
+                    title: "Large pothole on Galle Road",
+                    status: "Open",
+                    category: "Potholes"
+                },
+                {
+                    position: [6.9271, 79.8412],
+                    title: "Street light not working",
+                    status: "In Progress",
+                    category: "Street Lights"
+                },
+                {
+                    position: [7.2906, 80.6337],
+                    title: "Garbage not collected",
+                    status: "Open",
+                    category: "Garbage Collection"
+                },
+                {
+                    position: [6.8406, 79.8712],
+                    title: "Broken footbridge",
+                    status: "Fixed",
+                    category: "Damaged Property"
+                },
+                {
+                    position: [7.2086, 79.8356],
+                    title: "Road flooding during rain",
+                    status: "In Progress",
+                    category: "Flooding"
+                }
+            ];
+            
+            // Define status colors
+            const statusColors = {
+                "Open": "#ff9f43",
+                "In Progress": "#a29bfe",
+                "Fixed": "#00b894",
+                "Closed": "#636e72"
+            };
+            
+            // Add markers to map
+            reports.forEach(report => {
+                const marker = L.marker(report.position).addTo(map);
+                marker.bindPopup(`
+                    <strong>${report.title}</strong><br>
+                    Status: <span style="color: ${statusColors[report.status]}">${report.status}</span><br>
+                    Category: ${report.category}
+                `);
+            });
+        }
+        
+        // Report item click functionality
+        const reportItems = document.querySelectorAll('.report-item');
+        reportItems.forEach(item => {
+            item.addEventListener('click', function() {
+                alert('Opening report details page');
+                // In a real implementation, this would navigate to the report details page
+            });
+        });
+        
+        // Filter button functionality
+        document.querySelector('.filter-button').addEventListener('click', function() {
+            alert('Filters applied!');
+            // In a real implementation, this would filter the reports
+        });
+        
+        // Sort functionality
+        document.getElementById('sort-by').addEventListener('change', function() {
+            alert(`Sorting by: ${this.value}`);
+            // In a real implementation, this would sort the reports
+        });
+        
+        // Pagination functionality
+        const paginationButtons = document.querySelectorAll('.pagination button');
+        paginationButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.textContent === 'Next') {
+                    alert('Loading next page...');
+                } else {
+                    paginationButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    alert(`Loading page ${this.textContent}...`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
