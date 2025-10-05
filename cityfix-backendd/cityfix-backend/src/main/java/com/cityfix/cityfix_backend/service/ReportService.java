@@ -50,6 +50,10 @@ public class ReportService {
             existing.setPhotos(updatedReport.getPhotos());
         }
 
+        if (updatedReport.getStatus() != null) {
+            existing.setStatus(updatedReport.getStatus());
+        }
+
         return repository.save(existing);
     }
 }

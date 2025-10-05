@@ -266,83 +266,76 @@
         </div>
     </footer>
 <script>
-    // Password toggle functionality
+    // Password toggle
     function setupPasswordToggle(passwordFieldId, toggleIconId) {
         const passwordField = document.getElementById(passwordFieldId);
         const toggleIcon = document.getElementById(toggleIconId);
-        
         toggleIcon.addEventListener('click', function() {
             if (passwordField.type === 'password') {
-                passwordField.type = 'text';
+                passwordField.type = 'text'; 
                 toggleIcon.textContent = '🔒';
             } else {
-                passwordField.type = 'password';
+                passwordField.type = 'password'; 
                 toggleIcon.textContent = '👁️';
             }
         });
     }
+    setupPasswordToggle('signInPassword','toggleSignInPassword');
 
-    setupPasswordToggle('signInPassword', 'toggleSignInPassword');
+    function validateEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);}
+    function showError(id){document.getElementById(id).style.display='block';}
+    function hideError(id){document.getElementById(id).style.display='none';}
 
-    // Validation functions
-    function validateEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function showError(id) { document.getElementById(id).style.display = 'block'; }
-    function hideError(id) { document.getElementById(id).style.display = 'none'; }
-
-    // ✅ Handle Login Submission
-    document.getElementById('signInForm').addEventListener('submit', function(e) {
+    // Login
+    document.getElementById('signInForm').addEventListener('submit', function(e){
         e.preventDefault();
-
         const email = document.getElementById('signInEmail').value.trim();
         const password = document.getElementById('signInPassword').value.trim();
+        let valid = true;
 
-        let isValid = true;
+        if(!validateEmail(email)){ showError('signInEmailError'); valid=false; } 
+        else{ hideError('signInEmailError'); }
 
-        if (!validateEmail(email)) {
-            showError('signInEmailError');
-            isValid = false;
-        } else {
-            hideError('signInEmailError');
-        }
+        if(password===''){ showError('signInPasswordError'); valid=false; } 
+        else{ hideError('signInPasswordError'); }
 
-        if (password === '') {
-            showError('signInPasswordError');
-            isValid = false;
-        } else {
-            hideError('signInPasswordError');
-        }
+        if(!valid) return;
 
-        if (!isValid) return;
-
-        // 🔥 Send login request to backend
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
 
-        fetch("http://localhost:8080/api/citizens/login", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
+        fetch("http://localhost:8080/api/citizens/login", { method: "POST", body: formData })
+        .then(res => res.json())
         .then(data => {
-            if (data.status === "success") {
-                
-                localStorage.setItem("loggedInCitizen", JSON.stringify(data.citizen)); // save user info
-                window.location.href = "myReport.html";
+            if(data.status === "success") {
+                const citizen = data.citizen || data;
+
+                // Create clean object for localStorage
+                const storedCitizen = {
+                    id: citizen.citizenId || citizen.id,
+                    firstName: citizen.firstName || '',
+                    lastName: citizen.lastName || '',
+                    email: citizen.email || '',
+                    profilePicture: citizen.profilePicture || '', // make sure backend sends correct path
+                };
+
+                localStorage.setItem("loggedInCitizen", JSON.stringify(storedCitizen));
+                console.log("Saved to localStorage:", localStorage.getItem("loggedInCitizen"));
+
+                // Redirect to report page
+                window.location.href = "report.html";
             } else {
                 alert(data.message);
             }
         })
-        .catch(error => {
-            console.error("Error:", error);
+        .catch(err => {
+            console.error("Error:", err);
             alert("Something went wrong. Please try again.");
         });
     });
 </script>
+
 
 </body>
 </html>
