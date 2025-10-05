@@ -69,6 +69,8 @@ public class ReportController {
         if (photos != null && photos.length > 0) {
             StringBuilder photoNames = new StringBuilder();
             for (MultipartFile photo : photos) {
+                System.out.println("Received photo: " + photo.getOriginalFilename()
+                        + ", size: " + photo.getSize() + " bytes");
                 String filename = System.currentTimeMillis() + "_" + photo.getOriginalFilename();
                 Path uploadPath = Paths.get("uploads/reports");
                 try {
@@ -104,9 +106,9 @@ public class ReportController {
             @RequestParam String problemDescription,
             @RequestParam(required = false) List<MultipartFile> photos,
             @RequestParam(value = "publicizeIssue", required = false) Integer publicizeIssue,
-            @RequestParam(value = "showName", required = false) Integer showName
+            @RequestParam(value = "showName", required = false) Integer showName,
+            @RequestParam(value = "status", required = false) String status  // NEW
     ) {
-
         Map<String, String> response = new HashMap<>();
         Report existingReport = reportService.getReportById(id);
         if (existingReport == null) {
@@ -122,17 +124,17 @@ public class ReportController {
         existingReport.setProblemTitle(problemTitle);
         existingReport.setProblemDescription(problemDescription);
 
-        // Update new fields
         if (publicizeIssue != null) existingReport.setPublicizeIssue(publicizeIssue);
         if (showName != null) existingReport.setShowName(showName);
 
-        // Handle new photos
+        if (status != null) existingReport.setStatus(status);  // NEW
+
+        // Photos handling remains the same...
         if (photos != null && !photos.isEmpty()) {
             StringBuilder filenames = new StringBuilder();
             if (existingReport.getPhotos() != null) {
                 filenames.append(existingReport.getPhotos()).append(",");
             }
-
             Long citizenId = existingReport.getCitizen().getId();
             Long reportId = existingReport.getId();
             Path uploadPath = Paths.get("uploads/reports/" + citizenId + "/" + reportId);
@@ -148,7 +150,7 @@ public class ReportController {
                     }
                 }
                 if (filenames.length() > 0) {
-                    filenames.deleteCharAt(filenames.length() - 1); // remove last comma
+                    filenames.deleteCharAt(filenames.length() - 1);
                     existingReport.setPhotos(filenames.toString());
                 }
             } catch (IOException e) {
