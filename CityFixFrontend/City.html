@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Management - City Issue Management</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            success: "#2ecc71",
+            danger: "#e74c3c",
+            warning: "#f39c12",
+          },
+          fontFamily: {
+            display: ["Public Sans", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="cityStyle.css" />
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+
+  <!-- Sidebar + Main Content -->
+  <div class="relative flex h-auto min-h-screen w-full flex-row overflow-x-hidden">
+    
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">home_repair_service</span>
+        <h2 class="text-lg font-bold">Admin</h2>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="#" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+        <a href="#" class="nav-link"><span class="material-symbols-outlined">location_city</span> City Management</a>
+        <a href="#" class="nav-link active"><span class="material-symbols-outlined">group</span> User Management</a>
+        <a href="#" class="nav-link"><span class="material-symbols-outlined">corporate_fare</span> Departments</a>
+        <a href="#" class="nav-link"><span class="material-symbols-outlined">campaign</span> Announcements</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDq-bEdeQvTUFQfGMmcdZHf-1RELAjituhWCp0i71NeNRWpBXweCIYIug7qIkEUGtL45xucaVl5qP3zzxpgiqWsamZkGBLmoptGaghq_mInRZVvvohj-5amHhgzjuaWCXgi94_oCErfMKaNQEQ7Hqywb-7IhsqJRLsTDi3CClTiZfHZIgZDE_G0H5zv2yHN8szc7-lTxcvrYPSOaw7twEzfKTT6sjQEaUrwaD3I1a8XrDRU6njzRGnXA_yerjoSexW6a1wiJxNv');"></div>
+        <div>
+          <p class="text-sm font-medium">Super Admin</p>
+          <p class="text-xs text-gray-500">admin@city.gov</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+      <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">User Management</h2>
+        <div class="flex gap-4">
+          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">notifications</button>
+          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">settings</button>
+        </div>
+      </header>
+
+      <main class="px-10 py-5 flex-1" id="content-area">
+         <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="text-2xl font-bold">User Management</h1>
+          <p class="text-gray-500 text-sm">Manage city admins, sub-city managers, and citizens.</p>
+        </div>
+        <button id="addCityAdminBtn" class="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-700">
+          + Add City Admin
+        </button>
+      </div>
+
+      <!-- Add City Admin Form -->
+      <div id="addCityAdminForm" class="hidden bg-white dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6 mb-8 shadow">
+        <h3 class="text-lg font-semibold mb-4">Add New City Admin</h3>
+        <form id="cityAdminForm" class="grid grid-cols-2 gap-4">
+          <div class="col-span-2 flex flex-col items-center mb-4">
+            <div class="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-200">
+              <span class="material-symbols-outlined text-4xl">photo_camera</span>
+              <input type="file" id="uploadPicture" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" />
+            </div>
+            <p class="text-sm text-blue-600 mt-1 cursor-pointer hover:underline">Upload Picture</p>
+          </div>
+
+          <input type="text" placeholder="Full Name" id="fullName" class="border rounded p-2" required>
+          <input type="text" placeholder="NIC" id="nic" class="border rounded p-2" required>
+          <input type="email" placeholder="Email" id="email" class="border rounded p-2" required>
+          <input type="tel" placeholder="Phone Number" id="phone" class="border rounded p-2">
+          <input type="text" placeholder="Address" id="address" class="border rounded p-2">
+          <input type="date" id="dob" class="border rounded p-2">
+          <select id="city" class="border rounded p-2">
+            <option>Select City</option>
+            <option>Colombo</option>
+            <option>Kandy</option>
+            <option>Galle</option>
+          </select>
+          <input type="password" placeholder="Temporary Password" id="password" class="border rounded p-2" required>
+
+          <div class="col-span-2 flex justify-end mt-4">
+            <button type="button" id="cancelBtn" class="mr-4 px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Create City Admin</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Search + Filters -->
+      <div class="flex justify-between mb-4">
+        <input type="text" id="searchInput" placeholder="Search by name or email" class="border rounded p-2 w-1/2">
+        <div>
+          <select id="roleFilter" class="border rounded p-2 mr-2">
+            <option>Role: All</option>
+            <option>City Admin</option>
+            <option>Sub-City Manager</option>
+            <option>Citizen</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- User Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="p-2 text-left">Name</th>
+              <th class="p-2 text-left">Email</th>
+              <th class="p-2 text-left">Role</th>
+              <th class="p-2 text-left">Last Login</th>
+              <th class="p-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
+      </div>
+
+        <div id="userModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+
+    <div class="bg-white dark:bg-[#19232e] rounded-xl w-96 p-6 relative">
+      <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-white text-xl">×</button>
+      <h3 class="text-lg font-semibold mb-4" id="modalTitle">User Details</h3>
+      <form id="modalForm" class="grid grid-cols-1 gap-3">
+        <div class="flex justify-center mb-4">
+          <div id="modalProfilePicture" class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+            <span class="material-symbols-outlined text-4xl">person</span>
+          </div>
+        </div>
+        <input type="text" id="modalFirstName" class="border rounded p-2" placeholder="First Name"/>
+        <input type="text" id="modalLastName" class="border rounded p-2" placeholder="Last Name"/>
+        <input type="email" id="modalEmail" class="border rounded p-2" placeholder="Email"/>
+        <input type="tel" id="modalPhone" class="border rounded p-2" placeholder="Phone"/>
+        <input type="text" id="modalAddress" class="border rounded p-2" placeholder="Address"/>
+        <input type="text" id="modalCity" class="border rounded p-2" placeholder="City"/>
+        <input type="text" id="modalSubCity" class="border rounded p-2" placeholder="Sub-City"/>
+        <input type="text" id="modalRole" class="border rounded p-2 bg-gray-100" placeholder="Role" readonly/>
+        <div class="flex justify-end gap-2 mt-4">
+          <button type="button" id="modalDeleteBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
+          <button type="submit" id="modalSaveBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Custom JS -->
+  <script src="cityTypescript.js"></script>
+</body>
+</html>
