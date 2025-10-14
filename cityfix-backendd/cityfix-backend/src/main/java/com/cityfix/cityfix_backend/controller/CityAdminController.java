@@ -10,11 +10,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/city-admins")
+@CrossOrigin(origins = "*") // ADD THIS LINE
 public class CityAdminController {
 
     @Autowired
     private CityAdminService service;
 
+    // YOUR EXISTING METHODS (no changes needed)
     @PostMapping("/add")
     public ResponseEntity<CityAdmin> addAdmin(@RequestBody CityAdmin admin) {
         return ResponseEntity.ok(service.addCityAdmin(admin));

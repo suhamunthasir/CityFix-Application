@@ -6,18 +6,25 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SuperAdminConfig {
 
+    private final PasswordEncoder passwordEncoder;
+
+    public SuperAdminConfig(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Bean
     public UserDetailsService users() {
         UserDetails superAdmin = User.builder()
-                .username("superadmin")
-                .password(new BCryptPasswordEncoder().encode("Temp@123"))
+                .username("superadmin@google.com")
+                .password(passwordEncoder.encode("Temp@123"))
                 .roles("SUPER_ADMIN")
                 .build();
+
         return new InMemoryUserDetailsManager(superAdmin);
     }
 }

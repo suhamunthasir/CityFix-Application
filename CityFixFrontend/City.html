@@ -8,6 +8,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  
 
   <!-- TailwindCSS -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -48,13 +49,24 @@
         <h2 class="text-lg font-bold">Admin</h2>
       </div>
 
-      <nav class="flex flex-col gap-2 flex-1">
-        <a href="#" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-        <a href="#" class="nav-link"><span class="material-symbols-outlined">location_city</span> City Management</a>
-        <a href="#" class="nav-link active"><span class="material-symbols-outlined">group</span> User Management</a>
-        <a href="#" class="nav-link"><span class="material-symbols-outlined">corporate_fare</span> Departments</a>
-        <a href="#" class="nav-link"><span class="material-symbols-outlined">campaign</span> Announcements</a>
-      </nav>
+    <nav class="flex flex-col gap-2 flex-1">
+  <a href="dashboard.html" class="nav-link">
+    <span class="material-symbols-outlined">dashboard</span> Dashboard
+  </a>
+  <a href="city-management.html" class="nav-link">
+    <span class="material-symbols-outlined">location_city</span> City Management
+  </a>
+  <a href="user-management.html" class="nav-link active">
+    <span class="material-symbols-outlined">group</span> User Management
+  </a>
+  <a href="department.html" class="nav-link">
+    <span class="material-symbols-outlined">corporate_fare</span> Departments
+  </a>
+  <a href="announcements.html" class="nav-link">
+    <span class="material-symbols-outlined">campaign</span> Announcements
+  </a>
+</nav>
+
 
       <div class="flex items-center gap-3">
         <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDq-bEdeQvTUFQfGMmcdZHf-1RELAjituhWCp0i71NeNRWpBXweCIYIug7qIkEUGtL45xucaVl5qP3zzxpgiqWsamZkGBLmoptGaghq_mInRZVvvohj-5amHhgzjuaWCXgi94_oCErfMKaNQEQ7Hqywb-7IhsqJRLsTDi3CClTiZfHZIgZDE_G0H5zv2yHN8szc7-lTxcvrYPSOaw7twEzfKTT6sjQEaUrwaD3I1a8XrDRU6njzRGnXA_yerjoSexW6a1wiJxNv');"></div>
@@ -82,20 +94,21 @@
           <p class="text-gray-500 text-sm">Manage city admins, sub-city managers, and citizens.</p>
         </div>
         <button id="addCityAdminBtn" class="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-700">
-          + Add City Admin
+          + Add Mayor
         </button>
       </div>
 
       <!-- Add City Admin Form -->
       <div id="addCityAdminForm" class="hidden bg-white dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6 mb-8 shadow">
-        <h3 class="text-lg font-semibold mb-4">Add New City Admin</h3>
+        <h3 class="text-lg font-semibold mb-4">Add New City Admin (Mayor)</h3>
         <form id="cityAdminForm" class="grid grid-cols-2 gap-4">
           <div class="col-span-2 flex flex-col items-center mb-4">
             <div class="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-200">
-              <span class="material-symbols-outlined text-4xl">photo_camera</span>
-              <input type="file" id="uploadPicture" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" />
+           <span class="material-symbols-outlined text-4xl">person</span>
+
+              
             </div>
-            <p class="text-sm text-blue-600 mt-1 cursor-pointer hover:underline">Upload Picture</p>
+           
           </div>
 
           <input type="text" placeholder="Full Name" id="fullName" class="border rounded p-2" required>
@@ -104,12 +117,38 @@
           <input type="tel" placeholder="Phone Number" id="phone" class="border rounded p-2">
           <input type="text" placeholder="Address" id="address" class="border rounded p-2">
           <input type="date" id="dob" class="border rounded p-2">
-          <select id="city" class="border rounded p-2">
-            <option>Select City</option>
-            <option>Colombo</option>
-            <option>Kandy</option>
-            <option>Galle</option>
-          </select>
+
+            <select id="city" class="border rounded p-2">
+                <option value="" disabled selected>Select City</option>
+                <option value="Colombo">Colombo</option>
+                <option value="Dehiwala-Mount Lavinia">Dehiwala-Mount Lavinia</option>
+                <option value="Sri Jayawardenepura Kotte">Sri Jayawardenepura Kotte</option>
+                <option value="Kaduwela">Kaduwela</option>
+                <option value="Moratuwa">Moratuwa</option>
+                <option value="Gampaha">Gampaha</option>
+                <option value="Kalutara">Kalutara</option>
+                <option value="Matale">Matale</option>
+                <option value="Kandy">Kandy</option>
+                <option value="Kurunegala">Kurunegala</option>
+                <option value="Anuradhapura">Anuradhapura</option>
+                <option value="Badulla">Badulla</option>
+                <option value="Bandarawela">Bandarawela</option>
+                <option value="Batticaloa">Batticaloa</option>
+                <option value="Galle">Galle</option>
+                <option value="Jaffna">Jaffna</option>
+                <option value="Matara">Matara</option>
+                <option value="Negombo">Negombo</option>
+                <option value="Nuwara Eliya">Nuwara Eliya</option>
+                <option value="Panadura">Panadura</option>
+                <option value="Point Pedro">Point Pedro</option>
+                <option value="Vavuniya">Vavuniya</option>
+                <option value="Kalmunai">Kalmunai</option>
+                <option value="Akkaraipattu">Akkaraipattu</option>
+                <option value="Trincomalee">Trincomalee</option>
+                <option value="Kurunegala">Kurunegala</option>
+                <option value="Polonnaruwa">Polonnaruwa</option>
+            </select>
+
           <input type="password" placeholder="Temporary Password" id="password" class="border rounded p-2" required>
 
           <div class="col-span-2 flex justify-end mt-4">
@@ -164,7 +203,36 @@
         <input type="email" id="modalEmail" class="border rounded p-2" placeholder="Email"/>
         <input type="tel" id="modalPhone" class="border rounded p-2" placeholder="Phone"/>
         <input type="text" id="modalAddress" class="border rounded p-2" placeholder="Address"/>
-        <input type="text" id="modalCity" class="border rounded p-2" placeholder="City"/>
+       <select id="modalCity" class="border rounded p-2">
+    <option value="" disabled selected>Select City</option>
+    <option value="Colombo">Colombo</option>
+    <option value="Dehiwala-Mount Lavinia">Dehiwala-Mount Lavinia</option>
+    <option value="Sri Jayawardenepura Kotte">Sri Jayawardenepura Kotte</option>
+    <option value="Kaduwela">Kaduwela</option>
+    <option value="Moratuwa">Moratuwa</option>
+    <option value="Gampaha">Gampaha</option>
+    <option value="Kalutara">Kalutara</option>
+    <option value="Matale">Matale</option>
+    <option value="Kandy">Kandy</option>
+    <option value="Kurunegala">Kurunegala</option>
+    <option value="Anuradhapura">Anuradhapura</option>
+    <option value="Badulla">Badulla</option>
+    <option value="Bandarawela">Bandarawela</option>
+    <option value="Batticaloa">Batticaloa</option>
+    <option value="Galle">Galle</option>
+    <option value="Jaffna">Jaffna</option>
+    <option value="Matara">Matara</option>
+    <option value="Negombo">Negombo</option>
+    <option value="Nuwara Eliya">Nuwara Eliya</option>
+    <option value="Panadura">Panadura</option>
+    <option value="Point Pedro">Point Pedro</option>
+    <option value="Vavuniya">Vavuniya</option>
+    <option value="Kalmunai">Kalmunai</option>
+    <option value="Akkaraipattu">Akkaraipattu</option>
+    <option value="Trincomalee">Trincomalee</option>
+    <option value="Polonnaruwa">Polonnaruwa</option>
+</select>
+
         <input type="text" id="modalSubCity" class="border rounded p-2" placeholder="Sub-City"/>
         <input type="text" id="modalRole" class="border rounded p-2 bg-gray-100" placeholder="Role" readonly/>
         <div class="flex justify-end gap-2 mt-4">
@@ -177,6 +245,17 @@
       </main>
     </div>
   </div>
+
+<!-- Popup Container -->
+<div id="popupMessage" class="popup hidden">
+  <div class="popup-content">
+    <span id="popupClose" class="popup-close">&times;</span>
+    <h3 id="popupTitle">Success</h3>
+    <p id="popupText">City Admin added successfully!</p>
+  </div>
+</div>
+
+
 
   <!-- Custom JS -->
   <script src="cityTypescript.js"></script>

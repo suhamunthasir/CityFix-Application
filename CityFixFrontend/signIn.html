@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -266,6 +267,7 @@
         </div>
     </footer>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
     // Password toggle
     function setupPasswordToggle(passwordFieldId, toggleIconId) {
         const passwordField = document.getElementById(passwordFieldId);
@@ -287,54 +289,107 @@
     function hideError(id){document.getElementById(id).style.display='none';}
 
     // Login
-    document.getElementById('signInForm').addEventListener('submit', function(e){
-        e.preventDefault();
-        const email = document.getElementById('signInEmail').value.trim();
-        const password = document.getElementById('signInPassword').value.trim();
-        let valid = true;
+    const signInForm = document.getElementById('signInForm');
+    if(signInForm){
+        signInForm.addEventListener('submit', function(e){
+            e.preventDefault();
 
-        if(!validateEmail(email)){ showError('signInEmailError'); valid=false; } 
-        else{ hideError('signInEmailError'); }
+            const email = document.getElementById('signInEmail').value.trim();
+            const password = document.getElementById('signInPassword').value.trim();
+            let valid = true;
 
-        if(password===''){ showError('signInPasswordError'); valid=false; } 
-        else{ hideError('signInPasswordError'); }
+            // Validate email (only for citizens)
+            if(email !== "superadmin" && !validateEmail(email)){ 
+                showError('signInEmailError'); valid=false; 
+            } else { hideError('signInEmailError'); }
 
-        if(!valid) return;
+            if(password===''){ showError('signInPasswordError'); valid=false; } 
+            else{ hideError('signInPasswordError'); }
 
-        const formData = new FormData();
-        formData.append("email", email);
-        formData.append("password", password);
+            if(!valid) return;
 
-        fetch("http://localhost:8080/api/citizens/login", { method: "POST", body: formData })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "success") {
-                const citizen = data.citizen || data;
+            // Check if superadmin login
+           // Superadmin login (securely via backend)
+if (email === "superadmin@google.com") {
+    const formData = new FormData();
+    formData.append("username", email);
+    formData.append("password", password);
 
-                // Create clean object for localStorage
-                const storedCitizen = {
-                    id: citizen.citizenId || citizen.id,
-                    firstName: citizen.firstName || '',
-                    lastName: citizen.lastName || '',
-                    email: citizen.email || '',
-                    profilePicture: citizen.profilePicture || '', // make sure backend sends correct path
-                };
-
-                localStorage.setItem("loggedInCitizen", JSON.stringify(storedCitizen));
-                console.log("Saved to localStorage:", localStorage.getItem("loggedInCitizen"));
-
-                // Redirect to report page
-                window.location.href = "city.html";
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("Something went wrong. Please try again.");
-        });
+    fetch("http://127.0.0.1:8080/api/auth/superadmin/login", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+    })
+    .then(res => {
+        console.log("Response status:", res.status);
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.text();
+    })
+    .then(text => {
+        console.log("Response text:", text);
+        if (text === "SUCCESS") {
+            const superAdminData = {
+                id: "superadmin",
+                firstName: "Super",
+                lastName: "Admin",
+                email: "superadmin@google.com",
+                profilePicture: ""
+                
+            };
+            localStorage.setItem("loggedInCitizen", JSON.stringify(superAdminData));
+            window.location.href = "city.html";
+        } else {
+            alert("Invalid Superadmin credentials. Server returned: " + text);
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Failed to connect to server: " + err.message);
     });
+    return;
+}
+
+            // Citizen login
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("password", password);
+
+            fetch("http://localhost:8080/api/citizens/login", { method: "POST", body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    const citizen = data.citizen || data;
+
+                    // Create clean object for localStorage
+                    const storedCitizen = {
+                        id: citizen.citizenId || citizen.id,
+                        firstName: citizen.firstName || '',
+                        lastName: citizen.lastName || '',
+                        email: citizen.email || '',
+                        profilePicture: citizen.profilePicture || '',
+                    };
+
+                    localStorage.setItem("loggedInCitizen", JSON.stringify(storedCitizen));
+                    console.log("Citizen logged in:", localStorage.getItem("loggedInCitizen"));
+
+                    // Redirect to report page
+                    window.location.href = "report.html"; 
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("Something went wrong. Please try again.");
+            });
+
+        });
+    }
+});
 </script>
+
 
 
 </body>
