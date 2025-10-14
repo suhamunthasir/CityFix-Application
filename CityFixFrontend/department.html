@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Department Management - City Issue Management</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            success: "#2ecc71",
+            danger: "#e74c3c",
+            warning: "#f39c12",
+          },
+          fontFamily: {
+            display: ["Public Sans", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* General dark background & text */
+    .dark body {
+      background-color: #101922;
+      color: #f5f5f5;
+    }
+
+    /* Sidebar */
+    .dark aside {
+      background-color: #19232e;
+      border-color: #2e3a47;
+    }
+    .dark .nav-link {
+      color: #cbd5e1;
+    }
+    .dark .nav-link:hover {
+      background-color: #1f2937;
+    }
+    .dark .nav-link.active {
+      background-color: rgba(52, 152, 219, 0.2);
+      color: #3498db;
+    }
+
+    /* Header */
+    .dark header {
+      background-color: #19232e;
+      border-color: #2e3a47;
+    }
+
+    /* Buttons */
+    .dark button {
+      color: #f5f5f5;
+    }
+    .dark button:hover {
+      background-color: #1f2937;
+    }
+
+    /* Table */
+    .dark table {
+      border-color: #2e3a47;
+    }
+    .dark th {
+      background-color: #1f2937;
+      color: #f5f5f5;
+    }
+    .dark td {
+      border-color: #2e3a47;
+    }
+
+    /* Modal */
+    .dark #departmentModal .bg-white {
+      background-color: #19232e;
+    }
+    .dark #departmentModal input,
+    .dark #departmentModal textarea {
+      background-color: #1f2937;
+      color: #f5f5f5;
+      border-color: #2e3a47;
+    }
+    .dark #departmentModal input:read-only {
+      background-color: #2e3a47;
+    }
+
+    /* Form fields & placeholders */
+    .dark input::placeholder {
+      color: #a0aec0;
+    }
+
+    /* Success / danger / warning buttons (optional) */
+    .dark .bg-green-600:hover { background-color: #27ae60; }
+    .dark .bg-red-600:hover { background-color: #c0392b; }
+    .dark .bg-blue-700:hover { background-color: #2980b9; }
+
+    /* Popup styles */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup.hidden {
+      display: none;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px 30px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: popFadeIn 0.25s ease-out;
+    }
+
+    .popup-content h3 {
+      margin-bottom: 8px;
+    }
+
+    .popup-content.success h3 {
+      color: #2e7d32; /* green */
+    }
+
+    .popup-content.error h3 {
+      color: #c62828; /* red */
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #777;
+    }
+
+    @keyframes popFadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Base style for nav links */
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem; /* space between icon and text */
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      color: #4b5563; /* gray-700 */
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+      font-weight: 500;
+    }
+
+    /* Hover effect */
+    .nav-link:hover {
+      background-color: #f3f4f6; /* gray-100 */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      color: #111827; /* gray-900 */
+    }
+
+    /* Active link */
+    .nav-link.active {
+      background-color: #2563eb; /* blue-600 */
+      color: white;
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Icon color inside active */
+    .nav-link.active .material-symbols-outlined {
+      color: white;
+    }
+
+    /* Icon color inside normal links */
+    .nav-link .material-symbols-outlined {
+      color: #6b7280; /* gray-500 */
+      transition: color 0.2s;
+    }
+
+    /* Optional: change icon color on hover */
+    .nav-link:hover .material-symbols-outlined {
+      color: #111827; /* gray-900 */
+    }
+
+    /* Smooth transition for all hover effects */
+    .nav-link,
+    .nav-link .material-symbols-outlined {
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* Department card styles */
+    .department-card {
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .department-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Logo preview */
+    .logo-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+
+  <!-- Sidebar + Main Content -->
+  <div class="relative flex h-auto min-h-screen w-full flex-row overflow-x-hidden">
+    
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">home_repair_service</span>
+        <h2 class="text-lg font-bold">Admin</h2>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="dashboard.html" class="nav-link">
+          <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="city-management.html" class="nav-link">
+          <span class="material-symbols-outlined">location_city</span> City Management
+        </a>
+        <a href="user-management.html" class="nav-link">
+          <span class="material-symbols-outlined">group</span> User Management
+        </a>
+        <a href="department.html" class="nav-link active">
+          <span class="material-symbols-outlined">corporate_fare</span> Departments
+        </a>
+        <a href="announcements.html" class="nav-link">
+          <span class="material-symbols-outlined">campaign</span> Announcements
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDq-bEdeQvTUFQfGMmcdZHf-1RELAjituhWCp0i71NeNRWpBXweCIYIug7qIkEUGtL45xucaVl5qP3zzxpgiqWsamZkGBLmoptGaghq_mInRZVvvohj-5amHhgzjuaWCXgi94_oCErfMKaNQEQ7Hqywb-7IhsqJRLsTDi3CClTiZfHZIgZDE_G0H5zv2yHN8szc7-lTxcvrYPSOaw7twEzfKTT6sjQEaUrwaD3I1a8XrDRU6njzRGnXA_yerjoSexW6a1wiJxNv');"></div>
+        <div>
+          <p class="text-sm font-medium">Super Admin</p>
+          <p class="text-xs text-gray-500">admin@city.gov</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+      <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">Department Management</h2>
+        <div class="flex gap-4">
+          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">notifications</button>
+          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">settings</button>
+        </div>
+      </header>
+
+      <main class="px-10 py-5 flex-1" id="content-area">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h1 class="text-2xl font-bold">Department Management</h1>
+            <p class="text-gray-500 text-sm">Manage city departments and their information.</p>
+          </div>
+          <button id="addDepartmentBtn" class="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-700">
+            + Add Department
+          </button>
+        </div>
+
+        <!-- Add Department Form -->
+        <div id="addDepartmentForm" class="hidden bg-white dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6 mb-8 shadow">
+          <h3 class="text-lg font-semibold mb-4">Add New Department</h3>
+          <form id="departmentForm" class="grid grid-cols-2 gap-4">
+            <div class="col-span-2 flex flex-col items-center mb-4">
+              <div class="logo-preview bg-gray-100 mb-2" id="logoPreview">
+                <span class="material-symbols-outlined text-4xl text-gray-400">apartment</span>
+              </div>
+              <input type="file" id="logoUpload" accept="image/*" class="hidden">
+              <button type="button" id="uploadLogoBtn" class="text-primary text-sm hover:underline">Upload Logo</button>
+            </div>
+
+            <div class="col-span-2">
+              <input type="text" placeholder="Department Name" id="departmentName" class="border rounded p-2 w-full" required>
+            </div>
+            
+            <div class="col-span-2">
+              <input type="email" placeholder="Email" id="departmentEmail" class="border rounded p-2 w-full" required>
+            </div>
+            
+            <div class="col-span-2">
+              <textarea placeholder="Description" id="departmentDescription" class="border rounded p-2 w-full" rows="3" required></textarea>
+            </div>
+
+            <div class="col-span-2 flex justify-end mt-4">
+              <button type="button" id="cancelBtn" class="mr-4 px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+              <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Create Department</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Search + Filters -->
+        <div class="flex justify-between mb-4">
+          <input type="text" id="searchInput" placeholder="Search by department name" class="border rounded p-2 w-1/2">
+        </div>
+
+        <!-- Departments List -->
+        <div id="departmentsContainer" class="space-y-6">
+          <!-- Departments will be dynamically added here -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Department Modal -->
+  <div id="departmentModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+    <div class="bg-white dark:bg-[#19232e] rounded-xl w-96 p-6 relative">
+      <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-white text-xl">×</button>
+      <h3 class="text-lg font-semibold mb-4" id="modalTitle">Department Details</h3>
+      <form id="modalForm" class="grid grid-cols-1 gap-3">
+        <div class="flex justify-center mb-4">
+          <div class="logo-preview bg-gray-100" id="modalLogoPreview">
+            <span class="material-symbols-outlined text-4xl text-gray-400">apartment</span>
+          </div>
+        </div>
+        <input type="text" id="modalDepartmentName" class="border rounded p-2" placeholder="Department Name" required/>
+        <input type="email" id="modalDepartmentEmail" class="border rounded p-2" placeholder="Email" required/>
+        <textarea id="modalDepartmentDescription" class="border rounded p-2" placeholder="Description" rows="3" required></textarea>
+        <div class="flex justify-end gap-2 mt-4">
+          <button type="button" id="modalDeleteBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
+          <button type="submit" id="modalSaveBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Popup Container -->
+  <div id="popupMessage" class="popup hidden">
+    <div class="popup-content">
+      <span id="popupClose" class="popup-close">&times;</span>
+      <h3 id="popupTitle">Success</h3>
+      <p id="popupText">Department added successfully!</p>
+    </div>
+  </div>
+
+  <script>
+    // Department Management TypeScript-like functionality
+    class DepartmentManager {
+      constructor() {
+        this.departments = [
+          {
+            id: 1,
+            name: "Public Works",
+            email: "public.works@city.gov",
+            description: "Responsible for the maintenance and improvement of city infrastructure, including roads, bridges, and public buildings.",
+            logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQthJZGgcECSDWb5oFBgSFP3KlWeKPqZntGcZ27dzbocfa2AjO0xU9mT3ucL0T_P1IhWKs_NJatwjYjmTIB97ExzNCXraCN8t42XyeT_mB7TfXRG2kKxbU2v_ZeNY2T1FbN7MVNt_xTpcQZUUXvIxfd0uKRnho49ezks5vCC4NDgNxT7PDATVTAtCCc_FXmoW39cubmI3B60vepopUzVfp2-BpERaVwn8rKnegzsjXTgk_2QAmUr5vpqp872m5hrhCmfgd1Gaf"
+          },
+          {
+            id: 2,
+            name: "Sanitation",
+            email: "sanitation@city.gov",
+            description: "Manages waste collection, recycling programs, and street cleaning to ensure a clean and healthy city environment.",
+            logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQthJZGgcECSDWb5oFBgSFP3KlWeKPqZntGcZ27dzbocfa2AjO0xU9mT3ucL0T_P1IhWKs_NJatwjYjmTIB97ExzNCXraCN8t42XyeT_mB7TfXRG2kKxbU2v_ZeNY2T1FbN7MVNt_xTpcQZUUXvIxfd0uKRnho49ezks5vCC4NDgNxT7PDATVTAtCCc_FXmoW39cubmI3B60vepopUzVfp2-BpERaVwn8rKnegzsjXTgk_2QAmUr5vpqp872m5hrhCmfgd1Gaf"
+          },
+          {
+            id: 3,
+            name: "Parks & Recreation",
+            email: "parks.rec@city.gov",
+            description: "Maintains city parks, recreational facilities, and organizes community sports and cultural events.",
+            logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuDv_2lGKP8R3CNSfHpMiWMEsgpXTRsr8HSm5RUfJsFzRfz5O2VkpNP9N5HKMBUm5LmfsYYO1IGn4a9JWiZ5YwJz3jdHXZHHULzJXHKKk14VKGVDr3C0VITvXoIy2O8sEpz-g3xVz3zL1AqmrEJwyJBEwvUSp1D--904FuzI4rUPJFHQrgG8naU64WrKmjvk2oHNyjC8aHp2Qht7ZM1BBHxc4SPLMbALPAmKCy8OzcZt2lY1w5xhw7jlwWMwsezPp7oSa1FVdDKI"
+          }
+        ];
+        
+        this.currentDepartmentId = null;
+        this.init();
+      }
+      
+      init() {
+        this.renderDepartments();
+        this.setupEventListeners();
+      }
+      
+      renderDepartments() {
+        const container = document.getElementById('departmentsContainer');
+        container.innerHTML = '';
+        
+        this.departments.forEach(dept => {
+          const departmentCard = this.createDepartmentCard(dept);
+          container.appendChild(departmentCard);
+        });
+      }
+      
+      createDepartmentCard(department) {
+        const card = document.createElement('div');
+        card.className = 'department-card bg-white dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6';
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center gap-4">
+              <div class="logo-preview bg-gray-100" style="background-image: url('${department.logo}')">
+                ${department.logo ? '' : '<span class="material-symbols-outlined text-4xl text-gray-400">apartment</span>'}
+              </div>
+              <div>
+                <h3 class="text-xl font-bold">${department.name}</h3>
+                <p class="text-gray-500">${department.email}</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="edit-btn text-primary hover:underline flex items-center gap-1 text-sm font-medium" data-id="${department.id}">
+                <span class="material-symbols-outlined text-base">edit</span>
+                <span>Edit</span>
+              </button>
+              <button class="delete-btn text-red-500 hover:underline flex items-center gap-1 text-sm font-medium" data-id="${department.id}">
+                <span class="material-symbols-outlined text-base">delete</span>
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+          <div class="text-gray-700 dark:text-gray-300">
+            <p>${department.description}</p>
+          </div>
+        `;
+        
+        return card;
+      }
+      
+      setupEventListeners() {
+        // Add department button
+        document.getElementById('addDepartmentBtn').addEventListener('click', () => {
+          this.toggleAddForm();
+        });
+        
+        // Cancel button
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+          this.toggleAddForm();
+        });
+        
+        // Department form submission
+        document.getElementById('departmentForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.addDepartment();
+        });
+        
+        // Upload logo button
+        document.getElementById('uploadLogoBtn').addEventListener('click', () => {
+          document.getElementById('logoUpload').click();
+        });
+        
+        // Logo upload preview
+        document.getElementById('logoUpload').addEventListener('change', (e) => {
+          this.previewLogo(e.target.files[0], 'logoPreview');
+        });
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+          this.filterDepartments(e.target.value);
+        });
+        
+        // Close modal button
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+          this.closeModal();
+        });
+        
+        // Modal form submission
+        document.getElementById('modalForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.updateDepartment();
+        });
+        
+        // Modal delete button
+        document.getElementById('modalDeleteBtn').addEventListener('click', () => {
+          this.deleteDepartment();
+        });
+        
+        // Popup close button
+        document.getElementById('popupClose').addEventListener('click', () => {
+          this.hidePopup();
+        });
+      }
+      
+      toggleAddForm() {
+        const form = document.getElementById('addDepartmentForm');
+        form.classList.toggle('hidden');
+      }
+      
+      addDepartment() {
+        const name = document.getElementById('departmentName').value;
+        const email = document.getElementById('departmentEmail').value;
+        const description = document.getElementById('departmentDescription').value;
+        
+        const newDepartment = {
+          id: this.departments.length + 1,
+          name,
+          email,
+          description,
+          logo: document.getElementById('logoPreview').style.backgroundImage || ''
+        };
+        
+        this.departments.push(newDepartment);
+        this.renderDepartments();
+        this.toggleAddForm();
+        this.resetForm();
+        this.showPopup('Success', 'Department added successfully!', 'success');
+        
+        // Add event listeners to new buttons
+        this.setupEditDeleteListeners();
+      }
+      
+      resetForm() {
+        document.getElementById('departmentForm').reset();
+        document.getElementById('logoPreview').style.backgroundImage = '';
+        document.getElementById('logoPreview').innerHTML = '<span class="material-symbols-outlined text-4xl text-gray-400">apartment</span>';
+      }
+      
+      filterDepartments(searchTerm) {
+        const filteredDepartments = this.departments.filter(dept => 
+          dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          dept.email.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        
+        const container = document.getElementById('departmentsContainer');
+        container.innerHTML = '';
+        
+        filteredDepartments.forEach(dept => {
+          const departmentCard = this.createDepartmentCard(dept);
+          container.appendChild(departmentCard);
+        });
+        
+        // Add event listeners to filtered buttons
+        this.setupEditDeleteListeners();
+      }
+      
+      setupEditDeleteListeners() {
+        // Edit buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            this.openEditModal(id);
+          });
+        });
+        
+        // Delete buttons
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.getAttribute('data-id'));
+            this.deleteDepartment(id);
+          });
+        });
+      }
+      
+      openEditModal(id) {
+        const department = this.departments.find(dept => dept.id === id);
+        if (!department) return;
+        
+        this.currentDepartmentId = id;
+        
+        document.getElementById('modalDepartmentName').value = department.name;
+        document.getElementById('modalDepartmentEmail').value = department.email;
+        document.getElementById('modalDepartmentDescription').value = department.description;
+        
+        const logoPreview = document.getElementById('modalLogoPreview');
+        if (department.logo) {
+          logoPreview.style.backgroundImage = `url('${department.logo}')`;
+          logoPreview.innerHTML = '';
+        } else {
+          logoPreview.style.backgroundImage = '';
+          logoPreview.innerHTML = '<span class="material-symbols-outlined text-4xl text-gray-400">apartment</span>';
+        }
+        
+        document.getElementById('departmentModal').classList.remove('hidden');
+      }
+      
+      closeModal() {
+        document.getElementById('departmentModal').classList.add('hidden');
+        this.currentDepartmentId = null;
+      }
+      
+      updateDepartment() {
+        if (!this.currentDepartmentId) return;
+        
+        const name = document.getElementById('modalDepartmentName').value;
+        const email = document.getElementById('modalDepartmentEmail').value;
+        const description = document.getElementById('modalDepartmentDescription').value;
+        
+        const departmentIndex = this.departments.findIndex(dept => dept.id === this.currentDepartmentId);
+        if (departmentIndex !== -1) {
+          this.departments[departmentIndex].name = name;
+          this.departments[departmentIndex].email = email;
+          this.departments[departmentIndex].description = description;
+          
+          this.renderDepartments();
+          this.closeModal();
+          this.showPopup('Success', 'Department updated successfully!', 'success');
+        }
+      }
+      
+      deleteDepartment(id = null) {
+        const departmentId = id || this.currentDepartmentId;
+        if (!departmentId) return;
+        
+        if (confirm('Are you sure you want to delete this department?')) {
+          this.departments = this.departments.filter(dept => dept.id !== departmentId);
+          this.renderDepartments();
+          
+          if (id) {
+            this.showPopup('Success', 'Department deleted successfully!', 'success');
+          } else {
+            this.closeModal();
+            this.showPopup('Success', 'Department deleted successfully!', 'success');
+          }
+        }
+      }
+      
+      previewLogo(file, previewId) {
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const preview = document.getElementById(previewId);
+            preview.style.backgroundImage = `url('${e.target.result}')`;
+            preview.innerHTML = '';
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+      
+      showPopup(title, text, type) {
+        const popup = document.getElementById('popupMessage');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupText = document.getElementById('popupText');
+        const popupContent = document.querySelector('.popup-content');
+        
+        popupTitle.textContent = title;
+        popupText.textContent = text;
+        
+        // Remove existing classes
+        popupContent.classList.remove('success', 'error');
+        
+        // Add appropriate class based on type
+        if (type === 'success') {
+          popupContent.classList.add('success');
+        } else if (type === 'error') {
+          popupContent.classList.add('error');
+        }
+        
+        popup.classList.remove('hidden');
+        
+        // Auto hide after 3 seconds
+        setTimeout(() => {
+          this.hidePopup();
+        }, 3000);
+      }
+      
+      hidePopup() {
+        document.getElementById('popupMessage').classList.add('hidden');
+      }
+    }
+    
+    // Initialize the department manager when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      const departmentManager = new DepartmentManager();
+    });
+  </script>
+  <script src="department.js" type="module"></script>
+
+  
+</body>
+</html>
