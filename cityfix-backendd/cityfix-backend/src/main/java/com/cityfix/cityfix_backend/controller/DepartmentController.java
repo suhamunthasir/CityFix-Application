@@ -36,13 +36,15 @@ public class DepartmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<Department> createDepartment(
             @RequestParam String name,
             @RequestParam String description,
             @RequestParam(required = false) String email,
             @RequestPart(value = "logo", required = false) MultipartFile logoFile
     ) throws IOException {
+
+        System.out.println("✅ Received department: " + name + " | " + description + " | " + email);
         Department department = new Department();
         department.setName(name);
         department.setDescription(description);
