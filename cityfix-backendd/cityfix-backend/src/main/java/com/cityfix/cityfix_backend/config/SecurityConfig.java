@@ -12,7 +12,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
+
 import java.util.Arrays;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
@@ -24,30 +28,30 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ADD THIS LINE
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/city-admins/add", "/api/city-admins/update/**", "/api/city-admins/delete/**")
-                        .hasRole("SUPER_ADMIN")
-                        .anyRequest().permitAll()
+                        // 🔓 Allow anyone to GET city admin data
+                        .requestMatchers(HttpMethod.GET, "/api/city-admins/**").permitAll()
 
-
-
+                        // 🔒 Restrict POST/PUT/DELETE to SUPER_ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/city-admins/**").hasRole("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/city-admins/**").hasRole("SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/city-admins/**").hasRole("SUPER_ADMIN")
 
                 )
-                .httpBasic(httpBasic -> {});
+                .httpBasic(withDefaults());
 
         return http.build();
     }
 
-    // ADD THIS METHOD
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 
@@ -57,7 +61,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 }

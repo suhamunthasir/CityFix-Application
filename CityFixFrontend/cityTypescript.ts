@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       htmlElement.classList.toggle("dark");
     }
   });
+  
 
   interface User {
     id?: number; // <-- Added for backend operations
@@ -40,12 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     firstLogin: boolean;
   }
 
-  let users: User[] = [
-    { firstName: "John", lastName: "Doe", email: "john.doe@example.com", phone: "123456789", address: "123 St", profilePicture: "", city: "Colombo", subCity: "", role: "City Admin", lastLogin: "2023-10-27" },
-    { firstName: "Jane", lastName: "Smith", email: "jane.smith@example.com", phone: "987654321", address: "456 St", profilePicture: "", city: "Galle", subCity: "", role: "City Admin", lastLogin: "2023-10-26" },
-    { firstName: "Citizen", lastName: "Kane", email: "citizen.kane@example.com", phone: "555666777", address: "789 St", profilePicture: "", city: "", subCity: "", role: "Citizen", lastLogin: "2023-10-24" },
-    { firstName: "Mike", lastName: "Ross", email: "mike.ross@example.com", phone: "111222333", address: "101 St", profilePicture: "", city: "Kandy", subCity: "Sub 1", role: "Sub-City Manager", lastLogin: "2023-10-25" },
-  ];
+  let users: User[] = [];
+  localStorage.removeItem("users");
+
 
   // API functions
   async function saveCityAdminToBackend(adminData: CityAdmin): Promise<number | null> {
@@ -80,6 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function getAllCityAdminsFromBackend(): Promise<User[]> {
     try {
+      const superAdminUsername = "superadmin@google.com";
+      const superAdminPassword = "Temp@123";
+
       const response = await fetch(`${API_BASE_URL}/all`);
       if (response.ok) {
         const cityAdmins: any[] = await response.json();
@@ -200,51 +201,24 @@ async function updateCityAdminInBackend(user: User): Promise<boolean> {
   const modalDeleteBtn = document.getElementById("modalDeleteBtn") as HTMLButtonElement;
   const modalSaveBtn = document.getElementById("modalSaveBtn") as HTMLButtonElement;
 
-  function renderTable(data: User[]) {
-    tbody.innerHTML = data
-      .filter(u => u.role !== "Super Admin")
-      .map((user, index) => `
-        <tr class="border-t cursor-pointer" data-index="${index}">
-          <td class="p-2">${user.firstName} ${user.lastName}</td>
-          <td class="p-2">${user.email}</td>
-          <td class="p-2">${user.role}</td>
-          <td class="p-2">${user.lastLogin}</td>
-          <td class="p-2">
-            ${(user.role === "Citizen" || user.role === "City Admin") ? '<button class="text-red-600 hover:text-red-800 delete-btn">🗑</button>' : ''}
-          </td>
-        </tr>
-      `).join("");
+function renderTable(data: User[]) {
+  // Only keep users that are not Super Admins
+  const filteredUsers = data.filter(user => user.role !== "Super Admin");
 
-    tbody.querySelectorAll("tr").forEach(row => {
-      row.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-        if (target.classList.contains("delete-btn")) return;
-        const idx = parseInt(row.dataset.index || "0");
-        openModal(users.filter(u => u.role !== "Super Admin")[idx]);
-      });
-    });
+  // Log for debugging
+  console.log("Rendering users:", filteredUsers);
 
-    tbody.querySelectorAll(".delete-btn").forEach((btn, idx) => {
-      btn.addEventListener("click", async (e) => {
-        e.stopPropagation();
-        const filteredUsers = users.filter(u => u.role !== "Super Admin");
-        const userToDelete = filteredUsers[idx];
-        if (userToDelete.id) {
-          const deleted = await deleteCityAdminFromBackend(userToDelete.id);
-          if (deleted) {
-            users.splice(users.indexOf(userToDelete), 1);
-            renderTable(users);
-            showPopup("Success ✅", "City Admin deleted successfully!", true);
-          } else {
-            showPopup("Error ❌", "Failed to delete from backend!", false);
-          }
-        } else {
-          users.splice(users.indexOf(userToDelete), 1);
-          renderTable(users);
-        }
-      });
-    });
-  }
+  tbody.innerHTML = filteredUsers
+    .map(user => `
+      <tr class="border-t">
+        <td class="p-2">${user.firstName} ${user.lastName}</td>
+        <td class="p-2">${user.email}</td>
+        <td class="p-2">${user.role}</td>
+        <td class="p-2">${user.lastLogin}</td>
+      </tr>
+    `).join("");
+}
+
 
   function openModal(user: User) {
     modalFirstName.value = user.firstName;
@@ -275,7 +249,7 @@ async function updateCityAdminInBackend(user: User): Promise<boolean> {
     });
 
     modalSaveBtn.style.display = (user.role === "City Admin") ? "inline-block" : "none";
-    modalDeleteBtn.style.display = (user.role === "Citizen" || user.role === "City Admin") ? "inline-block" : "none";
+    modalDeleteBtn.style.display = "none";
 
     modal.classList.remove("hidden");
 
@@ -317,6 +291,7 @@ async function updateCityAdminInBackend(user: User): Promise<boolean> {
   }
   modal.classList.add("hidden");
 };
+
 
   }
 
@@ -412,7 +387,7 @@ async function updateCityAdminInBackend(user: User): Promise<boolean> {
     formDiv.classList.add("hidden");
 
     if (backendId) {
-      showPopup("Success ✅", "City Admin added successfully to backend!", true);
+      showPopup("Success ✅", "City Admin added successfully !", true);
     } else {
       showPopup("Error ❌", "Failed to save City Admin to backend. Please check console.", false);
     }

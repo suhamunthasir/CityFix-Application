@@ -170,3 +170,299 @@
 .nav-link .material-symbols-outlined {
   transition: all 0.2s ease-in-out;
 }
+
+
+
+
+
+/* ===========================
+   ADD DEPARTMENT FORM
+=========================== */
+#addDepartmentForm {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+body.dark #addDepartmentForm {
+  background-color: #19232e;
+  border-color: #2e3a47;
+}
+
+/* Form labels and inputs */
+.form-label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+body.dark .form-label {
+  color: #d1d5db;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background-color: #fff;
+  transition: all 0.2s;
+}
+
+body.dark .form-input {
+  background-color: #1e293b;
+  border-color: #2e3a47;
+  color: #fff;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* File Upload Area */
+.file-upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 112px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: #f9fafb;
+  transition: all 0.2s;
+}
+
+body.dark .file-upload-area {
+  border-color: #2e3a47;
+  background-color: #1e293b;
+}
+
+.file-upload-area:hover {
+  background-color: #f3f4f6;
+}
+
+body.dark .file-upload-area:hover {
+  background-color: #27303f;
+}
+
+.file-upload-area p {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 2px 0;
+}
+
+body.dark .file-upload-area p {
+  color: #cbd5e1;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+button {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Cancel button */
+button#cancelDeptBtn {
+  background-color: #fff;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+body.dark button#cancelDeptBtn {
+  background-color: #1e293b;
+  color: #fff;
+  border-color: #2e3a47;
+}
+
+button#cancelDeptBtn:hover {
+  background-color: #f3f4f6;
+}
+
+body.dark button#cancelDeptBtn:hover {
+  background-color: #27303f;
+}
+
+/* Submit button */
+button[type="submit"] {
+  background-color: #10b981;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button[type="submit"]:hover {
+  background-color: #059669;
+}
+
+/* ===========================
+   DEPARTMENTS GRID
+=========================== */
+#departmentsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Department card */
+.department-card {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+body.dark .department-card {
+  background-color: #19232e;
+  border-color: #2e3a47;
+}
+
+.department-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo inside card */
+.department-card img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ===========================
+   MODAL (EDIT DEPARTMENT)
+=========================== */
+#departmentModal {
+  display: none; /* hidden by default */
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+#departmentModal.active {
+  display: flex;
+}
+
+#departmentModal > div {
+  background-color: #fff;
+  border-radius: 12px;
+  max-width: 480px;
+  width: 100%;
+  padding: 24px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+body.dark #departmentModal > div {
+  background-color: #19232e;
+}
+
+/* Modal close button */
+#closeDeptModalBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 1.25rem;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+body.dark #closeDeptModalBtn {
+  color: #cbd5e1;
+}
+
+#closeDeptModalBtn:hover {
+  color: #374151;
+}
+
+body.dark #closeDeptModalBtn:hover {
+  color: #fff;
+}
+
+/* Modal buttons */
+#modalDeptDeleteBtn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+#modalDeptDeleteBtn:hover {
+  background-color: #c0392b;
+}
+
+#modalDeptSaveBtn {
+  background-color: #10b981;
+  color: #fff;
+}
+
+#modalDeptSaveBtn:hover {
+  background-color: #059669;
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+#emptyState {
+  text-align: center;
+  padding: 64px 16px;
+  color: #6b7280;
+}
+
+body.dark #emptyState {
+  color: #cbd5e1;
+}
+
+#emptyState h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+body.dark #emptyState h3 {
+  color: #fff;
+}
+
+#emptyState p {
+  margin-bottom: 16px;
+}
+
+#emptyState button {
+  background-color: #3498db;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+#emptyState button:hover {
+  background-color: #2563eb;
+}

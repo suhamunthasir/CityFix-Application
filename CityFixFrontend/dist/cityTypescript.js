@@ -13,12 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             htmlElement.classList.toggle("dark");
         }
     });
-    let users = [
-        { firstName: "John", lastName: "Doe", email: "john.doe@example.com", phone: "123456789", address: "123 St", profilePicture: "", city: "Colombo", subCity: "", role: "City Admin", lastLogin: "2023-10-27" },
-        { firstName: "Jane", lastName: "Smith", email: "jane.smith@example.com", phone: "987654321", address: "456 St", profilePicture: "", city: "Galle", subCity: "", role: "City Admin", lastLogin: "2023-10-26" },
-        { firstName: "Citizen", lastName: "Kane", email: "citizen.kane@example.com", phone: "555666777", address: "789 St", profilePicture: "", city: "", subCity: "", role: "Citizen", lastLogin: "2023-10-24" },
-        { firstName: "Mike", lastName: "Ross", email: "mike.ross@example.com", phone: "111222333", address: "101 St", profilePicture: "", city: "Kandy", subCity: "Sub 1", role: "Sub-City Manager", lastLogin: "2023-10-25" },
-    ];
+    let users = [];
     // API functions
     async function saveCityAdminToBackend(adminData) {
         try {
@@ -50,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     async function getAllCityAdminsFromBackend() {
         try {
+            const superAdminUsername = "superadmin@google.com";
+            const superAdminPassword = "Temp@123";
             const response = await fetch(`${API_BASE_URL}/all`);
             if (response.ok) {
                 const cityAdmins = await response.json();
@@ -173,42 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="p-2">${user.email}</td>
           <td class="p-2">${user.role}</td>
           <td class="p-2">${user.lastLogin}</td>
-          <td class="p-2">
-            ${(user.role === "Citizen" || user.role === "City Admin") ? '<button class="text-red-600 hover:text-red-800 delete-btn">🗑</button>' : ''}
+         
+          
           </td>
         </tr>
       `).join("");
-        tbody.querySelectorAll("tr").forEach(row => {
-            row.addEventListener("click", (e) => {
-                const target = e.target;
-                if (target.classList.contains("delete-btn"))
-                    return;
-                const idx = parseInt(row.dataset.index || "0");
-                openModal(users.filter(u => u.role !== "Super Admin")[idx]);
-            });
-        });
-        tbody.querySelectorAll(".delete-btn").forEach((btn, idx) => {
-            btn.addEventListener("click", async (e) => {
-                e.stopPropagation();
-                const filteredUsers = users.filter(u => u.role !== "Super Admin");
-                const userToDelete = filteredUsers[idx];
-                if (userToDelete.id) {
-                    const deleted = await deleteCityAdminFromBackend(userToDelete.id);
-                    if (deleted) {
-                        users.splice(users.indexOf(userToDelete), 1);
-                        renderTable(users);
-                        showPopup("Success ✅", "City Admin deleted successfully!", true);
-                    }
-                    else {
-                        showPopup("Error ❌", "Failed to delete from backend!", false);
-                    }
-                }
-                else {
-                    users.splice(users.indexOf(userToDelete), 1);
-                    renderTable(users);
-                }
-            });
-        });
     }
     function openModal(user) {
         modalFirstName.value = user.firstName;
@@ -235,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inputEl.readOnly = !(user.role === "City Admin" && inputEl.id !== "modalRole");
         });
         modalSaveBtn.style.display = (user.role === "City Admin") ? "inline-block" : "none";
-        modalDeleteBtn.style.display = (user.role === "Citizen" || user.role === "City Admin") ? "inline-block" : "none";
+        modalDeleteBtn.style.display = "none";
         modal.classList.remove("hidden");
         modalDeleteBtn.onclick = async () => {
             if (!user.id) {
@@ -356,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
         form.reset();
         formDiv.classList.add("hidden");
         if (backendId) {
-            showPopup("Success ✅", "City Admin added successfully to backend!", true);
+            showPopup("Success ✅", "City Admin added successfully !", true);
         }
         else {
             showPopup("Error ❌", "Failed to save City Admin to backend. Please check console.", false);

@@ -22,7 +22,7 @@ public class SuperAdminConfig {
         UserDetails superAdmin = User.builder()
                 .username("superadmin@google.com")
                 .password(passwordEncoder.encode("Temp@123"))
-                .roles("SUPER_ADMIN")
+                .roles("SUPER_ADMIN") // must be ROLE_SUPER_ADMIN internally
                 .build();
 
         return new InMemoryUserDetailsManager(superAdmin);
