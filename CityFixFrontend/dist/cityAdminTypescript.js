@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (backendDeleted) {
                 users.splice(users.indexOf(user), 1);
                 renderTable(users);
-                showPopup("Success ✅", "City Admin deleted successfully123!", true);
+                showPopup("Success ✅", "City Admin deleted successfully!", true);
             }
             else {
                 showPopup("Error ❌", "Failed to delete City Admin from backend!", false);
@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 user.subCity = modalSubCity.value;
                 const backendUpdated = await updateCityAdminInBackend(user);
                 if (backendUpdated) {
-                    showPopup("Success ✅", "City Admin updated successfullyyy!", true);
+                    showPopup("Success ✅", "City Admin updated successfully!", true);
                     renderTable(users);
                 }
                 else {
@@ -353,4 +353,4 @@ document.addEventListener("DOMContentLoaded", () => {
         (_a = document.getElementById('popupMessage')) === null || _a === void 0 ? void 0 : _a.classList.add('hidden');
     });
 });
-//# sourceMappingURL=cityTypescript.js.map
+//# sourceMappingURL=cityAdminTypescript.js.map

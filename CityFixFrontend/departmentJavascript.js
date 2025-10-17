@@ -2,6 +2,14 @@
     const API_BASE_URL = 'http://localhost:8080/api/departments';
     const UPLOADS_BASE_URL = '/uploads/department';
 
+    // 🌓 Dark mode toggle with 'D' key (ignores typing)
+document.addEventListener("keydown", function(e) {
+  const tag = (document.activeElement && document.activeElement.tagName || "").toLowerCase();
+  if (e.key.toLowerCase() === "d" && tag !== "input" && tag !== "textarea") {
+    document.documentElement.classList.toggle("dark");
+  }
+});
+
     // DOM Elements
     const departmentsGrid = document.getElementById('departmentsGrid');
     const emptyState = document.getElementById('emptyState');
@@ -112,76 +120,111 @@
       });
     }
 
-    function createDepartmentCard(dept) {
-      const card = document.createElement('div');
-      card.className = 'department-card group';
-      
-      // Generate a color based on department name for consistent branding
-      const colorClass = getDepartmentColorClass(dept.name);
-      
-      card.innerHTML = `
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex items-center gap-4">
-            <div class="logo-container ${colorClass}">
-              ${dept.logo 
-                ? `<img src="${API_BASE_URL}/logos/${dept.logo}" alt="${dept.name} logo" class="w-full h-full object-contain p-1">`
-                : `<span class="material-symbols-outlined text-2xl ${getDepartmentIconColor(dept.name)}">corporate_fare</span>`
-              }
-            </div>
-            <div>
-              <h3 class="font-bold text-lg">${dept.name}</h3>
-              <p class="text-gray-500 text-sm">${dept.email || 'No email provided'}</p>
-            </div>
-          </div>
-          <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button class="action-btn edit-btn" data-id="${dept.id}" title="Edit Department">
-              <span class="material-symbols-outlined text-lg">edit</span>
-            </button>
-            <button class="action-btn delete-btn" data-id="${dept.id}" title="Delete Department">
-              <span class="material-symbols-outlined text-lg">delete</span>
-            </button>
-          </div>
-        </div>
-        <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">${dept.description || 'No description provided'}</p>
-        <div class="flex justify-between items-center text-sm text-gray-500 pt-3 border-t border-gray-100 dark:border-[#2e3a47]">
-          <span class="flex items-center gap-1">
-            <span class="material-symbols-outlined text-base">tag</span>
-            ID: ${dept.id}
-          </span>
-          <span class="material-symbols-outlined text-base transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
-        </div>
-      `;
-      
-      // Add event listeners to action buttons
-      card.querySelector('.edit-btn').addEventListener('click', () => openEditModal(dept.id));
-      card.querySelector('.delete-btn').addEventListener('click', () => deleteDepartment(dept.id));
-      
-      return card;
-    }
+ function createDepartmentCard(dept) {
+  const card = document.createElement('div');
+  card.className =
+    'department-card group cursor-pointer transition-transform hover:-translate-y-1 hover:shadow-xl bg-white dark:bg-[#19232e] rounded-xl p-6 border border-gray-100 dark:border-[#2e3a47] min-h-[280px]';
 
-    function openEditModal(id) {
-      const dept = departments.find(d => d.id === id);
-      if (!dept) return;
-      
-      document.getElementById('modalDeptId').value = dept.id;
-      document.getElementById('modalDeptName').value = dept.name;
-      document.getElementById('modalDeptDescription').value = dept.description || '';
-      document.getElementById('modalDeptEmail').value = dept.email || '';
-      
-      // Set logo preview
-      const logoPreview = document.getElementById('modalLogoPreview');
-      if (dept.logo) {
-        logoPreview.innerHTML = `<img src="${API_BASE_URL}/logos/${dept.logo}" alt="${dept.name} logo" class="w-full h-full object-contain p-1">`;
-      } else {
-        logoPreview.innerHTML = '<span class="material-symbols-outlined text-2xl text-gray-400">image</span>';
-      }
-      
-      currentEditingId = id;
-      departmentModal.classList.remove('hidden');
-      
-      // Set up delete button
-      document.getElementById('modalDeptDeleteBtn').onclick = () => deleteDepartment(id);
+  const colorClass = getDepartmentColorClass(dept.name);
+
+  card.innerHTML = `
+    <div class="flex items-start justify-between mb-6">
+      <div class="flex items-center gap-5">
+        <div class="logo-container ${colorClass} w-24 h-24">
+          ${
+            dept.logo
+              ? `<img src="${API_BASE_URL}/logos/${dept.logo}" alt="${dept.name} logo" class="w-full h-full object-contain p-1 rounded-lg">`
+              : `<span class="material-symbols-outlined text-4xl ${getDepartmentIconColor(
+                  dept.name
+                )}">corporate_fare</span>`
+          }
+        </div>
+        <div>
+          <h3 class="font-bold text-xl">${dept.name}</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-base">${dept.email || 'No email provided'}</p>
+        </div>
+      </div>
+      <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button class="action-btn edit-btn" data-id="${dept.id}" title="Edit Department">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
+        <button class="action-btn delete-btn" data-id="${dept.id}" title="Delete Department">
+          <span class="material-symbols-outlined text-lg">delete</span>
+        </button>
+      </div>
+    </div>
+    <p class="text-gray-700 dark:text-gray-200 mb-4 text-base line-clamp-2">${dept.description || 'No description provided'}</p>
+    <div class="flex justify-between items-center text-sm text-gray-500 pt-4 border-t border-gray-100 dark:border-[#2e3a47]">
+      <span class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-base">tag</span>
+        ID: ${dept.id}
+      </span>
+      <span class="material-symbols-outlined text-base transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+    </div>
+  `;
+
+  // Entire card clickable (excluding edit/delete buttons)
+  card.addEventListener('click', (event) => {
+    if (
+      event.target.closest('.edit-btn') ||
+      event.target.closest('.delete-btn')
+    ) {
+      return; // Don't trigger when clicking buttons
     }
+    openEditModal(dept.id);
+  });
+
+  // Edit/Delete button handlers
+  card.querySelector('.edit-btn').addEventListener('click', () => openEditModal(dept.id));
+  card.querySelector('.delete-btn').addEventListener('click', () => deleteDepartment(dept.id));
+
+  return card;
+}
+
+
+   function openEditModal(id) {
+  const dept = departments.find(d => d.id === id);
+  if (!dept) return;
+
+  // Fill modal fields
+  document.getElementById('modalDeptId').value = dept.id;
+  document.getElementById('modalDeptName').value = dept.name;
+  document.getElementById('modalDeptDescription').value = dept.description || '';
+  document.getElementById('modalDeptEmail').value = dept.email || '';
+
+  // Logo preview
+  const logoPreview = document.getElementById('modalLogoPreview');
+  if (dept.logo) {
+    logoPreview.innerHTML = `<img src="${API_BASE_URL}/logos/${dept.logo}" alt="${dept.name} logo" class="w-full h-full object-contain p-1">`;
+  } else {
+    logoPreview.innerHTML = '<span class="material-symbols-outlined text-2xl text-gray-400">image</span>';
+  }
+
+  currentEditingId = id;
+
+  // Show modal reliably
+  const modal = departmentModal;
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  modal.style.opacity = '1';
+  modal.style.visibility = 'visible';
+  modal.style.zIndex = '9999';
+  modal.scrollIntoView({ behavior: 'smooth' });
+
+  // Set up delete button
+  const deleteBtn = document.getElementById('modalDeptDeleteBtn');
+  if (deleteBtn) deleteBtn.onclick = () => deleteDepartment(id);
+
+  document.getElementById('closeDeptModalBtn').addEventListener('click', () => {
+  const modal = departmentModal;
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+  modal.style.opacity = '0';
+  modal.style.visibility = 'hidden';
+});
+
+}
+
 
     function handleCreateDepartment(e) {
       e.preventDefault();
@@ -274,6 +317,8 @@
         
         renderDepartments(departments);
         departmentModal.classList.add('hidden');
+        closeModal(departmentModal);
+
         showNotification('Department updated successfully!', 'success');
       })
       .catch(error => {
@@ -284,6 +329,13 @@
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
       });
+    }
+
+    function closeModal(modalElement) {
+      modalElement.classList.add('hidden');
+      modalElement.style.display = 'none';
+      modalElement.style.opacity = '0';
+      modalElement.style.visibility = 'hidden';
     }
 
     function deleteDepartment(id) {
@@ -307,7 +359,7 @@
         if (currentEditingId === id) {
           departmentModal.classList.add('hidden');
         }
-        
+         closeModal(departmentModal);
         showNotification('Department deleted successfully!', 'success');
       })
       .catch(error => {

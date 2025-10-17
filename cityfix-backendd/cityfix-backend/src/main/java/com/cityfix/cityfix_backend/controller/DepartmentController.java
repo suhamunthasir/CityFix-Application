@@ -12,6 +12,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -34,6 +44,17 @@ public class DepartmentController {
         return service.getDepartmentById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping("/logos/{filename:.+}")
+    public ResponseEntity<Resource> getLogo(@PathVariable String filename) throws IOException {
+        Path filePath = Paths.get("uploads/department").resolve(filename).normalize();
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
+        Resource resource = new UrlResource(filePath.toUri());
+        return ResponseEntity.ok()
+                .header("Content-Type", Files.probeContentType(filePath))
+                .body(resource);
     }
 
     @PostMapping("/save")

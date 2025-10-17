@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/city-admins/**").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/city-admins/**").hasRole("SUPER_ADMIN")
 
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(withDefaults());
 
