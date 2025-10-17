@@ -56,7 +56,7 @@
   <a href="city-management.html" class="nav-link">
     <span class="material-symbols-outlined">location_city</span> City Management
   </a>
-  <a href="user-management.html" class="nav-link active">
+  <a href="City.html" class="nav-link active">
     <span class="material-symbols-outlined">group</span> User Management
   </a>
   <a href="department.html" class="nav-link">
@@ -82,8 +82,16 @@
       <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
         <h2 class="text-lg font-bold">User Management</h2>
         <div class="flex gap-4">
-          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">notifications</button>
-          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">settings</button>
+        <a href="index.html" id="logoutBtn"
+          class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+          <span class="material-symbols-outlined text-[20px]">logout</span>
+          <span class="text-sm font-medium">Logout</span>
+        </a>
+        <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+          <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+          <span class="text-sm font-medium">Dark Mode</span>
+        </button>
+
         </div>
       </header>
 
@@ -257,7 +265,35 @@
 
 
 
+  <!-- Add this just before the closing </body> tag -->
+<script>
+  // Filter function
+  function filterUsers() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const role = document.getElementById('roleFilter').value;
+    const rows = document.getElementById('userTableBody').rows;
+
+    for (let i = 0; i < rows.length; i++) {
+      const name = rows[i].cells[0].textContent.toLowerCase();
+      const email = rows[i].cells[1].textContent.toLowerCase();
+      const userRole = rows[i].cells[2].textContent;
+
+      const matchesSearch = name.includes(query) || email.includes(query);
+      const matchesRole = role === "Role: All" || userRole === role;
+
+      rows[i].style.display = matchesSearch && matchesRole ? '' : 'none';
+    }
+  }
+
+  // Add event listeners
+  document.getElementById('searchInput').addEventListener('input', filterUsers);
+  document.getElementById('roleFilter').addEventListener('change', filterUsers);
+</script>
+
   <!-- Custom JS -->
-  <script src="cityTypescript.js"></script>
+  <script src="cityAdminType.js"></script>
+   <script src="darkmode.js"></script>
+   
 </body>
+
 </html>

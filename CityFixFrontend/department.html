@@ -56,7 +56,7 @@
         <a href="city-management.html" class="nav-link">
           <span class="material-symbols-outlined">location_city</span> City Management
         </a>
-        <a href="user-management.html" class="nav-link">
+        <a href="City.html" class="nav-link">
           <span class="material-symbols-outlined">group</span> User Management
         </a>
         <a href="department.html" class="nav-link active">
@@ -80,9 +80,16 @@
     <div class="flex-1 flex flex-col">
       <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
         <h2 class="text-lg font-bold">Department Management</h2>
-        <div class="flex gap-4">
-          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">notifications</button>
-          <button class="material-symbols-outlined text-2xl text-gray-500 hover:text-gray-700">settings</button>
+       <div class="flex gap-4">
+        <a href="index.html" id="logoutBtn"
+          class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+          <span class="material-symbols-outlined text-[20px]">logout</span>
+          <span class="text-sm font-medium">Logout</span>
+        </a>
+          <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+        <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+        <span class="text-sm font-medium">Dark Mode</span>
+      </button>
         </div>
       </header>
 
@@ -255,5 +262,6 @@
 
   <!-- Custom JS -->
   <script src="departmentJavascript.js"></script>
+  <script src="darkmode.js"></script>
 </body>
 </html>
