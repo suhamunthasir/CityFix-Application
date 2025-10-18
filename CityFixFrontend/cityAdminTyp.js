@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         return [2 /*return*/];
                     }
                     if (!validatePhone(phone)) {
-                        alert("Phone number must be 10 digits!");
+                        alert("Phone number must be 10 digits & valid!");
                         return [2 /*return*/];
                     }
                     if (!validateNIC(nic)) {
