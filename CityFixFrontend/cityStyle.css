@@ -535,3 +535,293 @@ body.dark #modalRole option {
   border-color: #3498db;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
 }
+
+/* === ANNOUNCEMENT CARDS STYLING === */
+#announcementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card base */
+#announcementsGrid .card,
+#announcementsGrid > div {
+  background: #ffffff;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  /* Fixed height */
+  height: 460px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark #announcementsGrid > div {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+#announcementsGrid > div:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Card content wrapper (scrollable content: images + text) */
+#announcementsGrid > div .card-content {
+  flex: 1;             /* take all remaining space */
+  overflow-y: auto;    /* scroll if content is too long */
+  padding: 0.75rem 1rem;
+}
+
+/* Smaller Image section inside content */
+#announcementsGrid img {
+  width: 100%;
+  height: 120px; /* smaller image height */
+  object-fit: cover;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+/* Content section */
+#announcementsGrid h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+.dark #announcementsGrid h3 {
+  color: #f1f5f9;
+}
+
+#announcementsGrid p {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.dark #announcementsGrid p {
+  color: #cbd5e1;
+}
+
+/* Priority + Category line */
+#announcementsGrid p.text-sm {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.dark #announcementsGrid p.text-sm {
+  color: #9ca3af;
+}
+
+/* Buttons area fixed at bottom of card */
+#announcementsGrid .flex.justify-end {
+  flex-shrink: 0;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+  position: relative;   /* stay at bottom of card */
+  z-index: 1;
+}
+
+.dark #announcementsGrid .flex.justify-end {
+  border-top-color: #334155;
+  background: #1e293b;
+}
+
+/* Buttons */
+#announcementsGrid button {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background 0.2s;
+}
+
+#announcementsGrid .editBtn {
+  background-color: #2563eb;
+}
+
+#announcementsGrid .editBtn:hover {
+  background-color: #1d4ed8;
+}
+
+#announcementsGrid .deleteBtn {
+  background-color: #dc2626;
+}
+
+#announcementsGrid .deleteBtn:hover {
+  background-color: #b91c1c;
+}
+
+/* Multiple images mini gallery */
+#announcementsGrid .card img:not(:first-child) {
+  margin-top: 4px;
+  border-radius: 0.5rem;
+}
+
+/* Text clipping for long content */
+#announcementsGrid .card p:not(.text-sm) {
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* show more lines since image smaller */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card itself does NOT scroll, only content inside scrolls */
+#announcementsGrid > div {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top color strip */
+#announcementsGrid > div::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  flex-shrink: 0;
+}
+
+/* Responsive tweak */
+@media (max-width: 640px) {
+  #announcementsGrid img {
+    height: 100px;
+  }
+  #announcementsGrid .card,
+  #announcementsGrid > div {
+    height: 420px;
+  }
+}
+
+/* Make the category dropdown always light in dark mode */
+.dark #announcementForm select,
+.dark #announcementForm select option {
+  background-color: #ffffff !important; /* white background */
+  color: #1e293b !important;           /* dark text */
+  border-color: #cbd5e1 !important;    /* light border */
+}
+
+/* Optional: ensure the arrow is visible */
+.dark #announcementForm select {
+  -webkit-appearance: none; /* removes default arrow on some browsers */
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 1.5rem;    /* space for custom arrow if needed */
+}
+
+/* Make sidebar static/fixed */
+aside {
+  position: fixed;       /* Sidebar stays in place */
+  top: 0;
+  left: 0;
+  height: 100vh;         /* Full viewport height */
+  overflow-y: auto;      /* Scroll if sidebar content overflows */
+  z-index: 50;           /* Stay above other content if needed */
+}
+
+/* Shift main content to the right of sidebar */
+body > .relative.flex {
+  padding-left: 16rem;   /* Same as sidebar width (w-64 = 16rem) */
+}
+
+/* Make main content scrollable */
+body > .relative.flex > .flex-1 {
+  overflow-y: auto;      /* Scroll only main content */
+  height: 100vh;         /* Take full viewport height */
+}
+
+/* Keep modal announcement category select readable in dark mode */
+.dark #modalAnnCategory {
+  background-color: #ffffff; /* white background */
+  color: #1e293b;           /* dark text */
+  border: 1px solid #cbd5e1; /* light border */
+}
+
+/* Optional: placeholder color */
+.dark #modalAnnCategory option {
+  background-color: #ffffff; /* white option background */
+  color: #1e293b;           /* dark option text */
+}
+
+/* ============================
+   User Modal & Form Dark Mode Fix
+============================ */
+
+/* Modal background */
+.dark #userModal .bg-white {
+    background-color: #1e293b; /* dark blue-gray */
+    color: #f1f5f9; /* light text */
+}
+
+/* Modal heading */
+.dark #userModal h3,
+.dark #userModal label {
+    color: #f1f5f9;
+}
+
+/* Inputs, selects, textareas */
+.dark #userModal input,
+.dark #userModal select,
+.dark #userModal textarea {
+    background-color: #2c3a4a; /* dark input background */
+   color: #ffffff !important;  
+    border: 1px solid #475569; /* soft gray border */
+}
+
+/* Placeholder text */
+.dark #userModal input::placeholder,
+.dark #userModal textarea::placeholder,
+.dark #userModal select option {
+    color: #94a3b8; /* gray placeholder */
+}
+
+/* Buttons */
+.dark #userModal button {
+    color: #f1f5f9;
+}
+
+.dark #userModal #modalDeleteBtn {
+    background-color: #dc2626; /* red button */
+}
+
+.dark #userModal #modalDeleteBtn:hover {
+    background-color: #b91c1c;
+}
+
+.dark #userModal #modalSaveBtn {
+    background-color: #16a34a; /* green button */
+}
+
+.dark #userModal #modalSaveBtn:hover {
+    background-color: #15803d;
+}
+
+/* Close button */
+.dark #userModal #closeModalBtn {
+    color: #cbd5e1;
+}
+
+.dark #userModal #closeModalBtn:hover {
+    color: #ffffff;
+}
+
+/* Scrollbar for long forms */
+.dark #userModal form::-webkit-scrollbar {
+    width: 8px;
+}
+.dark #userModal form::-webkit-scrollbar-thumb {
+    background-color: #475569;
+    border-radius: 4px;
+}
+.dark #userModal form::-webkit-scrollbar-track {
+    background: #1e293b;
+}

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const htmlElement = document.documentElement;
     const tbody = document.getElementById("userTableBody");
     const API_BASE_URL = "http://localhost:8080/api/city-admins";
-    // Dark mode toggle using 'D', ignore when typing
+    // 🌓 Dark mode toggle with 'D' key (ignores typing)
     document.addEventListener("keydown", (e) => {
         var _a;
         const tag = (((_a = document.activeElement) === null || _a === void 0 ? void 0 : _a.tagName) || "").toLowerCase();
@@ -13,51 +13,49 @@ document.addEventListener("DOMContentLoaded", () => {
             htmlElement.classList.toggle("dark");
         }
     });
+    // 🧍 Dummy users for display (you can remove later)
     let users = [];
-    localStorage.removeItem("users");
-    // API functions
+    // 🧩 API Functions
     async function saveCityAdminToBackend(adminData) {
         try {
-            console.log('Sending to backend:', adminData);
+            console.log("Sending to backend:", adminData);
             const superAdminUsername = "superadmin@google.com";
             const superAdminPassword = "Temp@123";
             const response = await fetch(`${API_BASE_URL}/add`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(`${superAdminUsername}:${superAdminPassword}`)
+                    "Content-Type": "application/json",
+                    "Authorization": "Basic " + btoa(`${superAdminUsername}:${superAdminPassword}`),
                 },
-                body: JSON.stringify(adminData)
+                body: JSON.stringify(adminData),
             });
             if (response.ok) {
                 const result = await response.json();
-                console.log('Success:', result);
-                return result.id; // <-- get backend ID
+                console.log("✅ Added:", result);
+                return result.id;
             }
             else {
-                console.error('Backend error:', response.status, await response.text());
+                console.error("❌ Backend error:", response.status, await response.text());
                 return null;
             }
         }
         catch (error) {
-            console.error('Network error:', error);
+            console.error("🔥 Network error:", error);
             return null;
         }
     }
     async function getAllCityAdminsFromBackend() {
         try {
-            const superAdminUsername = "superadmin@google.com";
-            const superAdminPassword = "Temp@123";
             const response = await fetch(`${API_BASE_URL}/all`);
             if (response.ok) {
                 const cityAdmins = await response.json();
-                console.log('Loaded from backend:', cityAdmins);
+                console.log("Loaded from backend:", cityAdmins);
                 return cityAdmins.map(admin => {
                     var _a, _b;
                     return ({
-                        id: admin.id, // <-- keep backend id
-                        firstName: ((_a = admin.fullName) === null || _a === void 0 ? void 0 : _a.split(' ')[0]) || '',
-                        lastName: ((_b = admin.fullName) === null || _b === void 0 ? void 0 : _b.split(' ').slice(1).join(' ')) || '',
+                        id: admin.id,
+                        firstName: ((_a = admin.fullName) === null || _a === void 0 ? void 0 : _a.split(" ")[0]) || "",
+                        lastName: ((_b = admin.fullName) === null || _b === void 0 ? void 0 : _b.split(" ").slice(1).join(" ")) || "",
                         email: admin.email,
                         phone: admin.phoneNumber,
                         address: admin.address,
@@ -65,14 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         city: admin.cityAssigned,
                         subCity: "",
                         role: "City Admin",
-                        lastLogin: new Date().toISOString().split("T")[0]
+                        lastLogin: new Date().toISOString().split("T")[0],
                     });
                 });
             }
             return [];
         }
         catch (error) {
-            console.error('Error loading from backend:', error);
+            console.error("Error loading from backend:", error);
             return [];
         }
     }
@@ -81,15 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const superAdminUsername = "superadmin@google.com";
             const superAdminPassword = "Temp@123";
             const response = await fetch(`${API_BASE_URL}/delete/${id}`, {
-                method: 'DELETE',
+                method: "DELETE",
                 headers: {
-                    'Authorization': 'Basic ' + btoa(`${superAdminUsername}:${superAdminPassword}`)
-                }
+                    "Authorization": "Basic " + btoa(`${superAdminUsername}:${superAdminPassword}`),
+                },
             });
             return response.ok;
         }
         catch (error) {
-            console.error('Failed to delete from backend:', error);
+            console.error("Failed to delete from backend:", error);
             return false;
         }
     }
@@ -102,11 +100,10 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const superAdminUsername = "superadmin@google.com";
             const superAdminPassword = "Temp@123";
-            // Fetch the existing City Admin first (to preserve required fields like nic, dob, etc.)
             const existingRes = await fetch(`${API_BASE_URL}/${user.id}`, {
                 headers: {
-                    'Authorization': 'Basic ' + btoa(`${superAdminUsername}:${superAdminPassword}`)
-                }
+                    "Authorization": "Basic " + btoa(`${superAdminUsername}:${superAdminPassword}`),
+                },
             });
             if (!existingRes.ok) {
                 console.error("❌ Failed to fetch existing City Admin before update");
@@ -124,30 +121,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 cityAssigned: user.city,
                 password: existing.password || "",
                 role: "CITY_ADMIN",
-                firstLogin: (_a = existing.firstLogin) !== null && _a !== void 0 ? _a : false
+                firstLogin: (_a = existing.firstLogin) !== null && _a !== void 0 ? _a : false,
             };
             const response = await fetch(`${API_BASE_URL}/update/${user.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Basic " + btoa(`${superAdminUsername}:${superAdminPassword}`)
+                    "Authorization": "Basic " + btoa(`${superAdminUsername}:${superAdminPassword}`),
                 },
-                body: JSON.stringify(updatedAdmin)
+                body: JSON.stringify(updatedAdmin),
             });
             if (response.ok) {
-                console.log("✅ Successfully updated City Admin:", updatedAdmin);
+                console.log("✅ Updated:", updatedAdmin);
                 return true;
             }
             else {
-                console.error("❌ Backend update failed:", response.status, await response.text());
+                console.error("❌ Update failed:", response.status, await response.text());
                 return false;
             }
         }
         catch (error) {
-            console.error("🔥 Update failed due to network or JSON issue:", error);
+            console.error("🔥 Update failed:", error);
             return false;
         }
     }
+    // 🧭 Modal Elements
     const modal = document.getElementById("userModal");
     const closeModalBtn = document.getElementById("closeModalBtn");
     const modalForm = document.getElementById("modalForm");
@@ -162,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalRole = document.getElementById("modalRole");
     const modalDeleteBtn = document.getElementById("modalDeleteBtn");
     const modalSaveBtn = document.getElementById("modalSaveBtn");
+    // 🧾 Render table
     function renderTable(data) {
         tbody.innerHTML = data
             .filter(u => u.role !== "Super Admin")
@@ -171,11 +170,42 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="p-2">${user.email}</td>
           <td class="p-2">${user.role}</td>
           <td class="p-2">${user.lastLogin}</td>
-         
-          
+          <td class="p-2">
+            ${(user.role === "Citizen" || user.role === "City Admin") ? '<button class="text-red-600 hover:text-red-800 delete-btn">🗑</button>' : ''}
           </td>
         </tr>
       `).join("");
+        tbody.querySelectorAll("tr").forEach(row => {
+            row.addEventListener("click", (e) => {
+                const target = e.target;
+                if (target.classList.contains("delete-btn"))
+                    return;
+                const idx = parseInt(row.dataset.index || "0");
+                openModal(users.filter(u => u.role !== "Super Admin")[idx]);
+            });
+        });
+        tbody.querySelectorAll(".delete-btn").forEach((btn, idx) => {
+            btn.addEventListener("click", async (e) => {
+                e.stopPropagation();
+                const filteredUsers = users.filter(u => u.role !== "Super Admin");
+                const userToDelete = filteredUsers[idx];
+                if (userToDelete.id) {
+                    const deleted = await deleteCityAdminFromBackend(userToDelete.id);
+                    if (deleted) {
+                        users.splice(users.indexOf(userToDelete), 1);
+                        renderTable(users);
+                        showPopup("Success ✅", "City Admin deleted successfully!", true);
+                    }
+                    else {
+                        showPopup("Error ❌", "Failed to delete from backend!", false);
+                    }
+                }
+                else {
+                    users.splice(users.indexOf(userToDelete), 1);
+                    renderTable(users);
+                }
+            });
+        });
     }
     function openModal(user) {
         modalFirstName.value = user.firstName;
@@ -184,17 +214,18 @@ document.addEventListener("DOMContentLoaded", () => {
         modalPhone.value = user.phone;
         modalAddress.value = user.address;
         if (user.role === "City Admin") {
-            modalCity.value = user.city; // set selected city
-            modalCity.disabled = false; // allow editing
+            modalCity.value = user.city;
+            modalCity.disabled = false;
             modalCity.style.display = "block";
         }
         else {
-            modalCity.style.display = "none"; // hide for non-admins
+            modalCity.style.display = "none";
         }
         modalSubCity.value = user.subCity;
         modalRole.value = user.role;
-        modalProfilePicture.innerHTML = user.profilePicture ? `<img src="${user.profilePicture}" class="w-20 h-20 rounded-full"/>` : `<span class="material-symbols-outlined text-4xl">person</span>`;
-        modalCity.style.display = (user.role === "Citizen") ? "none" : "block";
+        modalProfilePicture.innerHTML = user.profilePicture
+            ? `<img src="${user.profilePicture}" class="w-20 h-20 rounded-full"/>`
+            : `<span class="material-symbols-outlined text-4xl">person</span>`;
         modalSubCity.style.display = (user.role === "Citizen") ? "none" : "block";
         modalSubCity.disabled = (user.role === "City Admin");
         modalForm.querySelectorAll("input").forEach(inp => {
@@ -202,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inputEl.readOnly = !(user.role === "City Admin" && inputEl.id !== "modalRole");
         });
         modalSaveBtn.style.display = (user.role === "City Admin") ? "inline-block" : "none";
-        modalDeleteBtn.style.display = "none";
+        modalDeleteBtn.style.display = (user.role === "Citizen" || user.role === "City Admin") ? "inline-block" : "none";
         modal.classList.remove("hidden");
         modalDeleteBtn.onclick = async () => {
             if (!user.id) {
@@ -244,13 +275,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
     renderTable(users);
-    // Add City Admin
+    // 🏙 Add City Admin
     const addBtn = document.getElementById("addCityAdminBtn");
     const formDiv = document.getElementById("addCityAdminForm");
     const cancelBtn = document.getElementById("cancelBtn");
     const form = document.getElementById("cityAdminForm");
     addBtn.addEventListener("click", () => formDiv.classList.toggle("hidden"));
     cancelBtn.addEventListener("click", () => formDiv.classList.add("hidden"));
+    // 🧠 Validations
     function validateEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
@@ -263,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function validatePassword(password) {
         return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/.test(password);
     }
+    // 📝 Form submission
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const fullName = document.getElementById("fullName").value.trim();
@@ -282,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         if (!validatePhone(phone)) {
-            alert("Phone number must be 10 digits!");
+            alert("Phone number must be 10 digits & valid!");
             return;
         }
         if (!validateNIC(nic)) {
@@ -290,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         if (!validatePassword(password)) {
-            alert("Password must be at least 6 characters, include a number and a special character!");
+            alert("Password must include number + special character!");
             return;
         }
         const cityAdminData = {
@@ -303,18 +336,18 @@ document.addEventListener("DOMContentLoaded", () => {
             cityAssigned: city,
             password,
             role: "CITY_ADMIN",
-            firstLogin: true
+            firstLogin: true,
         };
         const backendId = await saveCityAdminToBackend(cityAdminData);
         users.push({
             id: backendId || undefined,
             firstName: fullName.split(" ")[0] || "",
-            lastName: fullName.split(" ")[1] || "",
+            lastName: fullName.split(" ").slice(1).join(" "),
             email,
-            phone: phone,
-            address: address,
+            phone,
+            address,
             profilePicture: "",
-            city: city,
+            city,
             subCity: "",
             role: "City Admin",
             lastLogin: new Date().toISOString().split("T")[0],
@@ -323,34 +356,35 @@ document.addEventListener("DOMContentLoaded", () => {
         form.reset();
         formDiv.classList.add("hidden");
         if (backendId) {
-            showPopup("Success ✅", "City Admin added successfully !", true);
+            showPopup("Success ✅", "City Admin added successfully!", true);
         }
         else {
-            showPopup("Error ❌", "Failed to save City Admin to backend. Please check console.", false);
+            showPopup("Error ❌", "Failed to save City Admin to backend!", false);
         }
     });
-    // Load existing admins from backend on startup
+    // 🧩 Load from backend
     getAllCityAdminsFromBackend().then(backendAdmins => {
         if (backendAdmins.length > 0) {
             users = users.filter(user => user.role !== "City Admin").concat(backendAdmins);
             renderTable(users);
         }
     });
+    // 💬 Popup
     function showPopup(title, message, isSuccess) {
-        const popup = document.getElementById('popupMessage');
-        const titleEl = document.getElementById('popupTitle');
-        const textEl = document.getElementById('popupText');
-        const content = popup.querySelector('.popup-content');
+        const popup = document.getElementById("popupMessage");
+        const titleEl = document.getElementById("popupTitle");
+        const textEl = document.getElementById("popupText");
+        const content = popup.querySelector(".popup-content");
         titleEl.textContent = title;
         textEl.textContent = message;
-        content.classList.remove('success', 'error');
-        content.classList.add(isSuccess ? 'success' : 'error');
-        popup.classList.remove('hidden');
-        setTimeout(() => popup.classList.add('hidden'), 2500);
+        content.classList.remove("success", "error");
+        content.classList.add(isSuccess ? "success" : "error");
+        popup.classList.remove("hidden");
+        setTimeout(() => popup.classList.add("hidden"), 2500);
     }
-    (_a = document.getElementById('popupClose')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
+    (_a = document.getElementById("popupClose")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
         var _a;
-        (_a = document.getElementById('popupMessage')) === null || _a === void 0 ? void 0 : _a.classList.add('hidden');
+        (_a = document.getElementById("popupMessage")) === null || _a === void 0 ? void 0 : _a.classList.add("hidden");
     });
 });
-//# sourceMappingURL=cityTypescript.js.map
+//# sourceMappingURL=cityAdminType.js.map

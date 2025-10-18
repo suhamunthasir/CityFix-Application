@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     if (!validatePhone(phone)) {
-      alert("Phone number must be 10 digits!");
+      alert("Phone number must be 10 digits & valid!");
       return;
     }
     if (!validateNIC(nic)) {
@@ -442,4 +442,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("popupClose")?.addEventListener("click", () => {
     document.getElementById("popupMessage")?.classList.add("hidden");
   });
-});
+}); 
