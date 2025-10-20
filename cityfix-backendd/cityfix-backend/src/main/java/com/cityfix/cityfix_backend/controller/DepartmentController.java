@@ -6,6 +6,8 @@ import com.cityfix.cityfix_backend.entity.Department;
 
 import com.cityfix.cityfix_backend.service.DepartmentService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +30,13 @@ import java.nio.file.Paths;
 @RequestMapping("/api/departments")
 public class DepartmentController {
 
+
     private final DepartmentService service;
 
     public DepartmentController(DepartmentService service) {
         this.service = service;
     }
+
 
     @GetMapping
     public List<Department> getAllDepartments() {

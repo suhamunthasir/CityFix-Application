@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report a Problem - CityFix Sri Lanka</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,9 +16,12 @@
             <div class="logo">City<span>Fix</span></div>
             <nav>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="myReport.html">My Reports</a></li>
+                      <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+                     <li><a href="myReport.html">My Reports</a></li>
                     <li><a href="#" class="active">Report a Problem</a></li>
+                
+
+                   
                 </ul>
             </nav>
             <div class="user-menu">
@@ -24,8 +29,10 @@
                     <!-- User avatar will be populated by JavaScript -->
                 </div>
                 <span id="user-name">Loading...</span>
+                
             </div>
         </div>
+        
     </header>
 
     <!-- Page Header -->
@@ -123,54 +130,33 @@
             </section>
             
             <!-- Details Section -->
-            <section id="details-section" class="form-section">
-                <h2>Describe the Problem</h2>
-                
-                <div class="form-group">
-                    <label>Problem Category</label>
-                    <div class="category-options">
-                        <div class="category-option" data-category="Public health & Environment">
-                            <i>🩺</i>
-                            <span>Public Health & Environment</span>
-                        </div>
-                        <div class="category-option" data-category="street lights & electricity">
-                            <i>💡</i>
-                            <span>Street Lights & Electricity</span>
-                        </div>
-                        <div class="category-option" data-category="waste management">
-                            <i>🗑️</i>
-                            <span>Waste management</span>
-                        </div>
-                        <div class="category-option" data-category="road & infrastructure">
-                            <i>🏗️</i>
-                            <span>Roads & Infrastructure</span>
-                        </div>
-                        <div class="category-option" data-category="water & sanitation">
-                            <i>🌊</i>
-                            <span>Water & Sanitation </span>
-                        </div>
-                        <div class="category-option" data-category="other">
-                            <i>❓</i>
-                            <span>Other Issues</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="problem-title">Problem Title</label>
-                    <input type="text" id="problem-title" placeholder="Brief description of the problem (e.g., 'Large pothole on Main Street')" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="problem-description">Detailed Description</label>
-                    <textarea id="problem-description" placeholder="Please provide as much detail as possible about the problem..." required></textarea>
-                </div>
-                
-                <div class="form-navigation">
-                    <button type="button" class="nav-button secondary" id="back-to-photo">Previous: Photo</button>
-                    <button type="button" class="nav-button" id="next-to-confirmation">Next: Confirmation</button>
-                </div>
-            </section>
+           <!-- Details Section -->
+<section id="details-section" class="form-section">
+    <h2>Describe the Problem</h2>
+    
+    <div class="form-group">
+        <label>Problem Category</label>
+        <div class="category-options" id="category-options">
+            <p>Loading categories...</p>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="problem-title">Problem Title</label>
+        <input type="text" id="problem-title" placeholder="Brief description of the problem (e.g., 'Large pothole on Main Street')" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="problem-description">Detailed Description</label>
+        <textarea id="problem-description" placeholder="Please provide as much detail as possible about the problem..." required></textarea>
+    </div>
+    
+    <div class="form-navigation">
+        <button type="button" class="nav-button secondary" id="back-to-photo">Previous: Photo</button>
+        <button type="button" class="nav-button" id="next-to-confirmation">Next: Confirmation</button>
+    </div>
+</section>
+
             
             <!-- Confirmation Section -->
             <section id="confirmation-section" class="form-section">

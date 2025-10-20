@@ -4,6 +4,7 @@ import com.cityfix.cityfix_backend.entity.Citizen;
 import com.cityfix.cityfix_backend.entity.Report;
 import com.cityfix.cityfix_backend.service.CitizenService;
 import com.cityfix.cityfix_backend.service.ReportService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+
 @RestController
 @RequestMapping("/api/reports")
 @CrossOrigin(origins = "*")
@@ -27,6 +37,7 @@ public class ReportController {
 
     @Autowired
     private CitizenService citizenService;
+
 
     @PostMapping("/submit")
     public Map<String, String> submitReport(
@@ -177,6 +188,20 @@ public class ReportController {
     public List<Report> getReportsByCitizen(@PathVariable Long citizenId) {
         return reportService.getReportsByCitizenId(citizenId);
     }
+    @GetMapping("/uploads/reports/{filename:.+}")
+    public ResponseEntity<Resource> getReportPhoto(@PathVariable String filename) throws IOException {
+        Path filePath = Paths.get("uploads/reports").resolve(filename).normalize();
+
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = new UrlResource(filePath.toUri());
+        return ResponseEntity.ok()
+                .header("Content-Type", Files.probeContentType(filePath))
+                .body(resource);
+    }
+
 
     // READ - single report
     @GetMapping("/{id}")

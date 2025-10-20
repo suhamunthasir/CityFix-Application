@@ -669,11 +669,13 @@ body.dark #modalRole option {
 
 /* Text clipping for long content */
 #announcementsGrid .card p:not(.text-sm) {
-  display: -webkit-box;
-  -webkit-line-clamp: 5; /* show more lines since image smaller */
+  display: -webkit-box;       /* for WebKit browsers */
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;      /* vendor-prefixed */
+  line-clamp: 5;              /* standard property for compatibility */
   overflow: hidden;
 }
+
 
 /* Card itself does NOT scroll, only content inside scrolls */
 #announcementsGrid > div {

@@ -266,10 +266,69 @@ function submitReport() {
         });
 }
 
+// ✅ Fetch categories (departments) from backend
+// ✅ Fetch categories (departments) with logo + description
+async function loadCategories() {
+    const container = document.getElementById('category-options');
+    container.innerHTML = '<p>Loading categories...</p>';
+
+    try {
+        const response = await fetch('http://localhost:8080/api/departments');
+        if (!response.ok) throw new Error('Failed to load categories');
+
+        const departments = await response.json();
+
+        if (departments.length === 0) {
+            container.innerHTML = '<p>No departments found.</p>';
+            return;
+        }
+
+        container.innerHTML = ''; // Clear loading message
+
+        departments.forEach(dep => {
+            const div = document.createElement('div');
+            div.classList.add('category-option');
+            div.setAttribute('data-category', dep.name);
+
+            // ✅ Construct correct logo path or fallback
+            const imageUrl = dep.logo
+                ? `http://localhost:8080/api/departments/logos/${dep.logo}`
+                : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+
+            div.innerHTML = `
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="${imageUrl}" alt="${dep.name}"
+                        style="width:60px;height:60px;border-radius:50%;
+                               object-fit:cover;box-shadow:0 0 4px rgba(0,0,0,0.3);">
+                    <div style="display:flex;flex-direction:column;">
+                        <span style="font-weight:600;font-size:16px;">${dep.name}</span>
+                        <span style="font-size:13px;color:#555;">${dep.description || "No description available"}</span>
+                    </div>
+                </div>
+            `;
+
+            div.addEventListener('click', function () {
+                document.querySelectorAll('.category-option')
+                    .forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedCategory = dep.name;
+            });
+
+            container.appendChild(div);
+        });
+
+    } catch (error) {
+        console.error('Error loading categories:', error);
+        container.innerHTML = '<p>Error loading categories. Please try again later.</p>';
+    }
+}
+
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function () {
     console.log("DOM loaded, initializing page...");
     loadUserHeader();
+     loadCategories();
 
     setTimeout(() => {
         initMap();
@@ -331,13 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-document.querySelectorAll('.category-option').forEach(option => {
-    option.addEventListener('click', function () {
-        document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
-        this.classList.add('selected');
-        selectedCategory = this.getAttribute('data-category');
-    });
-});
+
 
 document.getElementById('photo-upload-area').addEventListener('click', function () {
     document.getElementById('photo-input').click();

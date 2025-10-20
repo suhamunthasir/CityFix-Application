@@ -28,3 +28,4 @@ window.addEventListener('DOMContentLoaded', () => {
     darkModeToggle.querySelector('span.text-sm').textContent = 'Light Mode';
   }
 });
+

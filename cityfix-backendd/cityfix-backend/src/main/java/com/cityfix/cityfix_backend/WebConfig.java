@@ -16,5 +16,9 @@ public class WebConfig implements WebMvcConfigurer {
         // Serve uploaded department logos
         registry.addResourceHandler("/uploads/department/**")
                 .addResourceLocations("file:uploads/department/");
+
+        // Serve uploaded report imagess
+        registry.addResourceHandler("/uploads/reports/**")
+                .addResourceLocations("file:uploads/reports/");
     }
 }
