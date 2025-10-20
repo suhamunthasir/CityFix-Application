@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City Admin Dashboard - CityFix</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link rel="stylesheet" href="cityStyle.css" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            success: "#2ecc71",
+            danger: "#e74c3c",
+            warning: "#f39c12",
+          },
+          fontFamily: {
+            display: ["Public Sans", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+
+  <div class="relative flex h-auto min-h-screen w-full flex-row overflow-x-hidden">
+
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">domain</span>
+        <h2 class="text-lg font-bold">City Admin</h2>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="city-admin-dashboard.html" class="nav-link active">
+          <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="departmentManage.html" class="nav-link">
+          <span class="material-symbols-outlined">group</span>Manage Staff
+        </a>
+        <a href="city-reports.html" class="nav-link">
+          <span class="material-symbols-outlined">report</span> Reports
+        </a>
+      </nav>
+
+        <div class="flex items-center gap-3">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://cdn-icons-png.flaticon.com/512/2202/2202112.png');"></div>
+        <div>
+            <p id="userName" class="text-sm font-medium">City Admin</p>
+            <p id="userEmail" class="text-xs text-gray-500">cityadmin@cityfix.lk</p>
+            <p id="userCity" class="text-xs text-gray-400"></p> <!-- optional for cityAssigned -->
+        </div>
+        </div>
+
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+
+      <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">City Administration Panel</h2>
+        <div class="flex gap-4">
+          <a href="index.html" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+          </a>
+          <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+            <span class="text-sm font-medium">Dark Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="px-10 py-6 flex-1 space-y-10">
+
+        <!-- Subcity Managers Section -->
+        <section>
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h1 class="text-2xl font-bold">Department Managers</h1>
+              <p class="text-gray-500 text-sm">Manages managers and assign them to departments.</p>
+            </div>
+           
+          </div>
+
+          
+
+          <!-- Department Cards -->
+         <!-- Department Cards Container -->
+<div id="departmentsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Department cards will be injected here dynamically by JS -->
+</div>
+
+
+        <!-- Reports Section -->
+        <section>
+          <h2 class="text-2xl font-bold mb-4">City Reports Overview</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white dark:bg-[#1a2532] p-5 rounded-xl border border-gray-200 dark:border-[#2e3a47] text-center shadow-sm">
+              <p class="text-gray-500 text-sm">Total Reports</p>
+              <h3 class="text-3xl font-bold text-primary mt-1">245</h3>
+            </div>
+            <div class="bg-white dark:bg-[#1a2532] p-5 rounded-xl border border-gray-200 dark:border-[#2e3a47] text-center shadow-sm">
+              <p class="text-gray-500 text-sm">Resolved</p>
+              <h3 class="text-3xl font-bold text-green-600 mt-1">189</h3>
+            </div>
+            <div class="bg-white dark:bg-[#1a2532] p-5 rounded-xl border border-gray-200 dark:border-[#2e3a47] text-center shadow-sm">
+              <p class="text-gray-500 text-sm">Pending</p>
+              <h3 class="text-3xl font-bold text-yellow-500 mt-1">56</h3>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6 shadow-sm">
+            <h3 class="text-lg font-semibold mb-4">Recent Reports</h3>
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500 border-b border-gray-200 dark:border-[#2e3a47]">
+                  <th class="pb-2">#</th>
+                  <th class="pb-2">Title</th>
+                  <th class="pb-2">Category</th>
+                  <th class="pb-2">Status</th>
+                  <th class="pb-2">Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 dark:divide-[#2e3a47]">
+                <tr>
+                  <td>1</td>
+                  <td>Broken Streetlight</td>
+                  <td>Public Works</td>
+                  <td><span class="text-green-600 font-medium">Resolved</span></td>
+                  <td>2025-10-18</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Overflowing Garbage</td>
+                  <td>Sanitation</td>
+                  <td><span class="text-yellow-500 font-medium">Pending</span></td>
+                  <td>2025-10-19</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Blocked Drain</td>
+                  <td>Sanitation</td>
+                  <td><span class="text-green-600 font-medium">Resolved</span></td>
+                  <td>2025-10-17</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userData = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if(userData){
+      document.getElementById("userName").textContent = userData.firstName + (userData.lastName ? " " + userData.lastName : "");
+      document.getElementById("userEmail").textContent = userData.email;
+      if(userData.cityAssigned){
+        document.getElementById("userCity").textContent = "City: " + userData.cityAssigned;
+      }
+    } else {
+      // redirect if not logged in
+      window.location.href = "signin.html";
+    }
+  });
+</script>
+
+  <script src="darkmode.js"></script>
+   <script src="subcityManagerDashboardJavascript.js"></script>
+</body>
+</html>

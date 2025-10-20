@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityFix - Admin Login</title>
+<style>
+/* Reset and Base Styles */
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+body { background-color: #f4f4f4; color:#333; line-height:1.6; }
+a { text-decoration:none; color:inherit; }
+
+/* Header */
+header { background-color:#333; color:white; padding:1rem 0; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.container { width:90%; max-width:1200px; margin:0 auto; }
+.header-container { display:flex; justify-content:space-between; align-items:center; }
+.logo { font-size:1.8rem; font-weight:bold; color:#e67e22; }
+.logo span { color:#e74c3c; }
+nav ul { display:flex; list-style:none; }
+nav ul li { margin-left:1.5rem; }
+nav ul li a { color:white; padding:0.5rem 0.8rem; border-radius:4px; transition:0.3s; }
+nav ul li a:hover { background-color:#555; }
+
+/* Admin Login Form */
+.auth-container { display:flex; justify-content:center; align-items:center; min-height:80vh; }
+.auth-box { background:white; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.1); padding:2.5rem; width:100%; max-width:400px; }
+.auth-title { text-align:center; margin-bottom:1.5rem; color:#333; font-size:1.8rem; }
+.form-group { margin-bottom:1.5rem; }
+.form-group label { display:block; margin-bottom:0.5rem; font-weight:500; color:#555; }
+.form-group input, .form-group select { width:100%; padding:0.8rem; border:1px solid #ddd; border-radius:4px; font-size:1rem; transition:0.3s; }
+.form-group input:focus, .form-group select:focus { border-color:#3498db; outline:none; }
+.auth-button { width:100%; background-color:#3498db; color:white; border:none; padding:0.9rem; border-radius:4px; cursor:pointer; font-size:1rem; font-weight:600; transition:0.3s; }
+.auth-button:hover { background-color:#2980b9; }
+.error-message { color:#e74c3c; font-size:0.9rem; margin-top:0.5rem; display:none; }
+.password-toggle { position:relative; }
+.password-toggle input { padding-right:40px; }
+.toggle-icon { position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#777; }
+
+/* Footer */
+footer { background-color:#333; color:white; padding:2rem 0; text-align:center; margin-top:2rem; }
+
+/* Responsive */
+@media (max-width:768px) {
+    .auth-box { padding:1.5rem; margin:0 1rem; }
+}
+</style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container header-container">
+        <div class="logo">City<span>Fix</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="allReport.html">All Reports</a></li>
+                <li><a href="localReport.html">Local Reports</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Admin Login Form -->
+<section class="auth-container">
+    <div class="auth-box">
+        <h2 class="auth-title">Admin Login</h2>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="adminRole">Select Role</label>
+                <select id="adminRole" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="SUPER_ADMIN">Super Admin</option>
+                    <option value="CITY_ADMIN">City Admin</option>
+                    <option value="DEPARTMENT_MANAGER">Department Manager</option>
+                </select>
+                <div class="error-message" id="adminRoleError">Please select a role</div>
+            </div>
+
+            <div class="form-group">
+                <label for="adminEmail">Email Address</label>
+                <input type="email" id="adminEmail" placeholder="Enter your admin email" required>
+                <div class="error-message" id="adminEmailError">Please enter a valid email</div>
+            </div>
+
+            <div class="form-group password-toggle">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter your password" required>
+                <span class="toggle-icon" id="toggleAdminPassword">👁️</span>
+                <div class="error-message" id="adminPasswordError">Password is required</div>
+            </div>
+
+            <button type="submit" class="auth-button">Login</button>
+        </form>
+    </div>
+</section>
+ <script src="adminLoginJavascript.js"></script>
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
+    </div>
+</footer>
+ 
+</body>
+</html>

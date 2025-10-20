@@ -4,6 +4,9 @@ import com.cityfix.cityfix_backend.entity.Report;
 import com.cityfix.cityfix_backend.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +14,8 @@ import java.util.Optional;
 @Service
 public class ReportService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private ReportRepository repository;
 
@@ -18,7 +23,10 @@ public class ReportService {
         return repository.save(report);
     }
 
+
+
     public List<Report> getAllReports() {
+        entityManager.clear();
         return repository.findAll();
     }
 
@@ -33,6 +41,7 @@ public class ReportService {
 
     public void deleteReport(Long id) {
         repository.deleteById(id);
+        repository.flush();
     }
 
     public Report updateReport(Long id, Report updatedReport) {

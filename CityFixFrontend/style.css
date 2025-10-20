@@ -92,6 +92,10 @@ nav ul li a:hover, nav ul li a.active {
     object-fit: cover;
 }
 
+li a i {
+    margin-right: 6px;
+}
+
 /* Page Header */
 .page-header {
     background-color: #fff;

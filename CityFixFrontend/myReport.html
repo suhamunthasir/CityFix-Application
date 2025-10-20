@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Reports - CityFix Sri Lanka</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="style.css">
     <style>
         /* Reset and Base Styles */
         * {
@@ -516,17 +518,16 @@
             <div class="logo">City<span>Fix</span></div>
             <nav>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                   
-                   
-                   
-                    <li><a href="#" class="active">My Reports</a></li>
-                    <li><a href="report.html">Report a Problem</a></li>
+                     <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+                    <li><a href="#" class="active">My Report</a></li>
+                    <li><a href="Report.html">Report a Problem</a> </li>
                 </ul>
             </nav>
             <div class="user-menu">
-                <div class="user-avatar">JS</div>
-                <span>John Smith</span>
+                <div class="user-avatar" id="user-avatar">
+                    <!-- User avatar will be populated by JavaScript -->
+                </div>
+                <span id="user-name">Loading...</span>
             </div>
         </div>
     </header>
@@ -582,169 +583,7 @@
     <div class="container">
         <div class="reports-list">
             <!-- Report Item 1 -->
-            <div class="report-item" data-status="progress">
-                <div class="report-header">
-                    <div>
-                        <h3 class="report-title">Large pothole on Galle Road, Colombo 03</h3>
-                        <div class="report-meta">
-                            <span>Reported: 3 days ago</span>
-                            <span>Category: Potholes</span>
-                            <span>Reference: #CF20231201</span>
-                        </div>
-                    </div>
-                    <span class="report-status status-in-progress">In Progress</span>
-                </div>
-                <div class="report-content">
-                    <div class="report-image">
-                        <img src="https://images.unsplash.com/photo-1563453392212-326f5e854473?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Pothole">
-                    </div>
-                    <div class="report-details">
-                        <p class="report-description">A large pothole has developed near the junction of Galle Road and Hospital Lane. It's causing traffic delays and is dangerous for motorcyclists.</p>
-                        <div class="progress-tracking">
-                            <div class="progress-steps">
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">Reported</div>
-                                </div>
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">Acknowledged</div>
-                                </div>
-                                <div class="progress-step active">
-                                    <div class="step-icon">!</div>
-                                    <div class="step-label">In Progress</div>
-                                </div>
-                                <div class="progress-step">
-                                    <div class="step-icon">○</div>
-                                    <div class="step-label">Fixed</div>
-                                </div>
-                            </div>
-                            <div class="update-item">
-                                <div class="update-meta">
-                                    <span>Colombo Municipal Council</span>
-                                    <span>2 days ago</span>
-                                </div>
-                                <div class="update-content">Our team has inspected the site and repair work is scheduled for next week.</div>
-                            </div>
-                        </div>
-                        <div class="report-actions">
-                            <button class="action-button primary">View Details</button>
-                            <button class="action-button">Add Update</button>
-                            <button class="action-button">Share</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             
-            <!-- Report Item 2 -->
-            <div class="report-item" data-status="fixed">
-                <div class="report-header">
-                    <div>
-                        <h3 class="report-title">Street light not working on Park Street</h3>
-                        <div class="report-meta">
-                            <span>Reported: 2 weeks ago</span>
-                            <span>Category: Street Lights</span>
-                            <span>Reference: #CF20231125</span>
-                        </div>
-                    </div>
-                    <span class="report-status status-fixed">Fixed</span>
-                </div>
-                <div class="report-content">
-                    <div class="report-image">
-                        <img src="https://images.unsplash.com/photo-1517400508447-f8dd518b86db?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Street Light">
-                    </div>
-                    <div class="report-details">
-                        <p class="report-description">The street light near the Park Street junction has been out for over a week, making the area unsafe at night.</p>
-                        <div class="progress-tracking">
-                            <div class="progress-steps">
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">Reported</div>
-                                </div>
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">Acknowledged</div>
-                                </div>
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">In Progress</div>
-                                </div>
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">Fixed</div>
-                                </div>
-                            </div>
-                            <div class="update-item">
-                                <div class="update-meta">
-                                    <span>CEB Maintenance</span>
-                                    <span>5 days ago</span>
-                                </div>
-                                <div class="update-content">The faulty street light has been repaired and is now functioning properly.</div>
-                            </div>
-                        </div>
-                        <div class="report-actions">
-                            <button class="action-button primary">View Details</button>
-                            <button class="action-button">Confirm Fix</button>
-                            <button class="action-button">Share</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Report Item 3 -->
-            <div class="report-item" data-status="open">
-                <div class="report-header">
-                    <div>
-                        <h3 class="report-title">Garbage not collected for 5 days in Kandy</h3>
-                        <div class="report-meta">
-                            <span>Reported: 1 day ago</span>
-                            <span>Category: Garbage Collection</span>
-                            <span>Reference: #CF20231202</span>
-                        </div>
-                    </div>
-                    <span class="report-status status-open">Open</span>
-                </div>
-                <div class="report-content">
-                    <div class="report-image">
-                        <img src="https://images.unsplash.com/photo-1587332219075-67c8c9770045?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Garbage">
-                    </div>
-                    <div class="report-details">
-                        <p class="report-description">Garbage has been piling up on Dalada Veediya for 5 days without collection, causing odor and attracting animals.</p>
-                        <div class="progress-tracking">
-                            <div class="progress-steps">
-                                <div class="progress-step completed">
-                                    <div class="step-icon">✓</div>
-                                    <div class="step-label">Reported</div>
-                                </div>
-                                <div class="progress-step">
-                                    <div class="step-icon">○</div>
-                                    <div class="step-label">Acknowledged</div>
-                                </div>
-                                <div class="progress-step">
-                                    <div class="step-icon">○</div>
-                                    <div class="step-label">In Progress</div>
-                                </div>
-                                <div class="progress-step">
-                                    <div class="step-icon">○</div>
-                                    <div class="step-label">Fixed</div>
-                                </div>
-                            </div>
-                            <div class="update-item">
-                                <div class="update-meta">
-                                    <span>System</span>
-                                    <span>1 day ago</span>
-                                </div>
-                                <div class="update-content">Your report has been received and will be forwarded to the Kandy Municipal Council.</div>
-                            </div>
-                        </div>
-                        <div class="report-actions">
-                            <button class="action-button primary">View Details</button>
-                            <button class="action-button">Add Update</button>
-                            <button class="action-button">Share</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         
         <!-- Empty State (hidden by default) -->
@@ -842,5 +681,6 @@
             });
         });
     </script>
+        <script src="myReportJavascript.js"></script>
 </body>
 </html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Manager - CityFix</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="cityStyle.css" />
+
+  <style>
+   /* Ensure selects look correct in both modes */
+.form-input,
+select.form-input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid #ccc;
+}
+
+/* Strong dark-mode overrides — high specificity and !important to beat Tailwind/browser rules */
+html.dark .form-input,
+html.dark select.form-input {
+  --input-bg: #1e293b;   /* dark input bg */
+  --input-text: #f5f7fa; /* light input text */
+  background-color: #1e293b !important;
+  color: #f5f7fa !important;
+  border-color: #2e3a47 !important;
+}
+
+/* Make the SELECT dropdown options readable too */
+html.dark select.form-input option {
+  background-color: #1e293b !important;
+  color: #f5f7fa !important;
+}
+
+
+
+/* Optional: increase contrast for placeholder option */
+html.dark select.form-input option[value=""] {
+  color: #94a3b8 !important; /* softer gray for "Select Department" */
+}
+
+
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            success: "#2ecc71",
+            danger: "#e74c3c",
+            warning: "#f39c12",
+          },
+          fontFamily: { display: ["Public Sans", "sans-serif"] },
+        },
+      },
+    };
+
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+  <div class="relative flex h-auto min-h-screen w-full flex-row overflow-x-hidden">
+
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">domain</span>
+        <h2 class="text-lg font-bold">City Admin</h2>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="cityManager.html" class="nav-link">
+          <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="#" class="nav-link active">
+          <span class="material-symbols-outlined">group</span>Manage Staff
+        </a>
+        <a href="city-reports.html" class="nav-link">
+          <span class="material-symbols-outlined">report</span> Reports
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://cdn-icons-png.flaticon.com/512/2202/2202112.png');"></div>
+        <div>
+          <p id="userName" class="text-sm font-medium">City Admin</p>
+          <p id="userEmail" class="text-xs text-gray-500">cityadmin@cityfix.lk</p>
+          <p id="userCity" class="text-xs text-gray-400"></p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+      <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">Staff Management Panel</h2>
+        <div class="flex gap-4">
+          <a href="index.html" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+          </a>
+          <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+            <span class="text-sm font-medium">Dark Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="px-10 py-6 flex-1 space-y-10">
+        <section>
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h1 class="text-2xl font-bold">Department Managers</h1>
+              <p class="text-gray-500 text-sm">View, add, update, and delete department managers.</p>
+            </div>
+            <button id="addManagerBtn" class="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 flex items-center gap-2 transition-colors">
+              <span class="material-symbols-outlined text-lg">add</span>
+              Add Manager
+            </button>
+          </div>
+
+          <!-- Manager Form -->
+          <div id="managerForm" class="hidden dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6 mb-8 shadow-lg">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="p-2 bg-primary/10 rounded-lg">
+                <span class="material-symbols-outlined text-primary">group_add</span>
+              </div>
+              <h3 class="text-lg font-semibold">Add / Update Department Manager</h3>
+            </div>
+
+            <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <input type="hidden" id="managerId" />
+              <div>
+                <label class="form-label">Full Name *</label>
+                <input type="text" id="fullName" class="form-input" placeholder="Full Name" required />
+              </div>
+              <div>
+                <label class="form-label">NIC *</label>
+                <input type="text" id="nic" class="form-input" placeholder="NIC Number" required />
+              </div>
+              <div>
+                <label class="form-label">Email *</label>
+                <input type="email" id="email" class="form-input" placeholder="example@city.lk" required />
+              </div>
+              <div>
+                <label class="form-label">Phone Number</label>
+                <input type="text" id="phone" class="form-input" placeholder="+94 7X XXX XXXX" />
+              </div>
+              <div>
+                <label class="form-label">Address</label>
+                <input type="text" id="address" class="form-input" placeholder="Address" />
+              </div>
+              <div>
+                <label class="form-label">Department *</label>
+                <select id="department" class="form-input">
+                 <option value="" disabled selected>Select Department</option>
+
+                </select>
+              </div>
+              <div>
+                <label class="form-label">City</label>
+                <input type="text" id="city" class="form-input" placeholder="City" readonly />
+              </div>
+              <div>
+                <label class="form-label">Password *</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter password" required />
+                </div>
+
+              <div class="col-span-2 flex justify-end gap-3 pt-3">
+                <button type="button" id="cancelBtn" class="px-6 py-2.5 border border-gray-300 dark:border-[#2e3a47] rounded-lg hover:bg-gray-50 dark:hover:bg-[#1e293b]">Cancel</button>
+                <button type="submit" class="bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">check</span>
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Search Bar -->
+            <div class="flex justify-between items-center mb-4">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name, NIC, email, or department"
+                class="form-input w-1/3"
+            />
+            </div>
+
+
+          <!-- Table -->
+          <div class="bg-white dark:bg-[#19232e] border border-gray-200 dark:border-[#2e3a47] rounded-xl p-6 shadow-sm">
+            <h3 class="text-lg font-semibold mb-4">All Department Managers</h3>
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500 border-b border-gray-200 dark:border-[#2e3a47]">
+                  <th>#</th>
+                  <th>Full Name</th>
+                  <th>NIC</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Department</th>
+                  <th>City</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 dark:divide-[#2e3a47]"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="darkmode.js"></script>
+  <script src="departmentManageJavascript.js"></script>
+
+</body>
+
+ 
+</html>
