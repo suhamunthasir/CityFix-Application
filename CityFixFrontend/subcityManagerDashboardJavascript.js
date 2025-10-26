@@ -133,13 +133,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
   // Load Reports filtered by city
   // ---------------------------
-  async function loadReports() {
+ async function loadReports() {
   try {
     const response = await fetch(reportApi);
     const reports = await response.json();
 
-    const cityCoord = cityCoordinates[cityAssigned];
-    if (!cityCoord) return console.warn("City coordinates not found for:", cityAssigned);
+    // Find matching city case-insensitively
+    const cityKey = Object.keys(cityCoordinates).find(
+      key => key.toLowerCase().trim() === cityAssigned.toLowerCase().trim()
+    );
+    const cityCoord = cityCoordinates[cityKey];
+
+    if (!cityCoord) {
+      console.warn("City coordinates not found for:", cityAssigned);
+      return;
+    }
 
     const R = 6371; // Earth radius in km
     function distance(lat1, lon1, lat2, lon2) {
@@ -154,10 +162,30 @@ document.addEventListener("DOMContentLoaded", () => {
       return R * c; // km
     }
 
-    const filteredReports = reports.filter(
-      (r) => distance(r.latitude, r.longitude, cityCoord.lat, cityCoord.lon) <= 10
-    );
+    // Filter reports within 10 km radius and ensure coordinates are numbers
+    const filteredReports = reports.filter((r) => {
+      const lat = parseFloat(r.latitude);
+      const lon = parseFloat(r.longitude);
+      if (isNaN(lat) || isNaN(lon)) return false;
+      return distance(lat, lon, cityCoord.lat, cityCoord.lon) <= 5;
+    });
 
+    console.log("Filtered Reports:", filteredReports);
+
+    // --------------------------
+    // Update summary cards
+    // --------------------------
+    const totalReports = filteredReports.length;
+    const resolvedReports = filteredReports.filter(r => r.status?.toLowerCase() === 'resolved').length;
+    const pendingReports = filteredReports.filter(r => r.status?.toLowerCase() === 'pending').length;
+
+    document.querySelector("div > h3.text-3xl.font-bold.text-primary").textContent = totalReports;
+    document.querySelectorAll("div > h3.text-3xl.font-bold")[1].textContent = resolvedReports;
+    document.querySelectorAll("div > h3.text-3xl.font-bold")[2].textContent = pendingReports;
+
+    // --------------------------
+    // Populate table
+    // --------------------------
     const tableBody = document.querySelector("tbody");
     if (!tableBody) return;
 
@@ -169,19 +197,20 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${r.problemTitle}</td>
         <td>${r.problemCategory}</td>
         <td><span class="${
-          r.status.toLowerCase() === "resolved"
-            ? "text-green-600"
-            : "text-yellow-500"
+          r.status?.toLowerCase() === "resolved" ? "text-green-600" : "text-yellow-500"
         } font-medium">${r.status}</span></td>
         <td>${r.submittedDate}</td>
       `;
       tableBody.appendChild(tr);
     });
+
   } catch (error) {
     console.error("Error loading reports:", error);
     alert("Failed to load reports.");
   }
 }
+
+
 
 
   // Refresh button (optional)

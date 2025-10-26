@@ -118,7 +118,8 @@ public class ReportController {
             @RequestParam(required = false) List<MultipartFile> photos,
             @RequestParam(value = "publicizeIssue", required = false) Integer publicizeIssue,
             @RequestParam(value = "showName", required = false) Integer showName,
-            @RequestParam(value = "status", required = false) String status  // NEW
+            @RequestParam(value = "status", required = false) String status,  // existing
+            @RequestParam(value = "severity", required = false) String severity // ✅ NEW
     ) {
         Map<String, String> response = new HashMap<>();
         Report existingReport = reportService.getReportById(id);
@@ -137,8 +138,8 @@ public class ReportController {
 
         if (publicizeIssue != null) existingReport.setPublicizeIssue(publicizeIssue);
         if (showName != null) existingReport.setShowName(showName);
-
-        if (status != null) existingReport.setStatus(status);  // NEW
+        if (status != null) existingReport.setStatus(status);
+        if (severity != null) existingReport.setSeverity(severity); // ✅ NEW LINE
 
         // Photos handling remains the same...
         if (photos != null && !photos.isEmpty()) {
@@ -176,6 +177,7 @@ public class ReportController {
         response.put("message", "Report updated successfully");
         return response;
     }
+
 
     // READ - all reports
     @GetMapping("/")

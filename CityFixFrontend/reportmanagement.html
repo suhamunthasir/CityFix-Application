@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Management - Department Manager | CityFix</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            success: "#2ecc71",
+            warning: "#f39c12",
+            danger: "#e74c3c",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: { display: ["Public Sans", "sans-serif"] },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="cityStyle.css" />
+  <style>/* Dropdown Styling */
+select {
+  color: #111418; /* Light mode text */
+  background-color: #ffffff; /* Light mode background */
+  border: 1px solid #ccc;
+  border-radius: 0.375rem; /* Rounded edges */
+  padding: 0.25rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+/* Focus state for accessibility */
+select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+}
+
+/* Dark mode dropdowns */
+.dark select {
+  color: #f0f0f0; /* Light text */
+  background-color: #2a3540; /* Slightly lighter than bg-dark */
+  border: 1px solid #4b5563; /* Muted border */
+}
+
+/* Dark mode hover/focus for better visibility */
+.dark select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.4);
+}
+</style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+  <div class="relative flex min-h-screen w-full overflow-x-hidden">
+    
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">manage_accounts</span>
+        <h2 class="text-lg font-bold">Dept. Manager</h2>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="#" class="nav-link active">
+          <span class="material-symbols-outlined">report</span> Report Management
+        </a>
+        <a href="manageWorkers.html" class="nav-link">
+          <span class="material-symbols-outlined">group</span> Manage Workers
+        </a>
+        <a href="reportMapDept.html" class="nav-link">
+          <span class="material-symbols-outlined">map</span> Report Map
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://cdn-icons-png.flaticon.com/512/2202/2202112.png');"></div>
+        <div>
+          <p id="userName" class="text-sm font-medium">Department Manager</p>
+          <p id="userEmail" class="text-xs text-gray-500">deptmanager@cityfix.lk</p>
+      <p id="userDepartment" style="font-size: 0.85rem; color: #1E90FF; margin: 0; display: inline-block;">Department: IT</p>
+<p id="userCity" style="font-size: 0.85rem; color: #32CD32; margin: 0 0 0 10px; display: inline-block;">City: Colombo</p>
+
+
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="flex items-center justify-between border-b border-gray-200 dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">Report Management</h2>
+        <div class="flex gap-4">
+          <a href="index.html" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+          </a>
+          <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+            <span class="text-sm font-medium">Dark Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="px-10 py-8 flex-1 space-y-8">
+        <section>
+          <h1 class="text-2xl font-bold mb-4">Department Reports</h1>
+          <p class="text-gray-500 text-sm mb-6">Click on a report card to view full details or update its status.</p>
+
+          <div id="reportGrid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Cards will be injected here -->
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="reportModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white dark:bg-[#1a2532] w-11/12 md:w-3/4 lg:w-1/2 rounded-xl shadow-lg p-6 relative max-h-[90vh] overflow-y-auto">
+      <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <h2 class="text-xl font-bold mb-4 text-primary" id="modalTitle">Report Details</h2>
+
+      <div id="modalContent" class="space-y-3 text-sm"></div>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="saveChanges" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+ <script src = "reportManagementJavascript.js"></script>
+
+  <script src="darkmode.js"></script>
+</body>
+</html>
