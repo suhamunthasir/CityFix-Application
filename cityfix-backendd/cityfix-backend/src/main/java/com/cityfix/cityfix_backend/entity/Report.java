@@ -51,6 +51,10 @@ public class Report {
     @Column(name = "report_status", nullable = false)
     private String status = "New";
 
+    @Column(nullable = true)
+    private String severity; // Example values: Low, Medium, High, Critical
+
+
     // =================== GETTERS ===================
     public Long getId() { return id; }
     public Citizen getCitizen() { return citizen; }
@@ -65,6 +69,10 @@ public class Report {
     public Integer getPublicizeIssue() { return publicizeIssue; }
     public Integer getShowName() { return showName; }
     public String getStatus() { return status; }
+    public String getSeverity() { return severity;}
+
+
+
 
     // =================== SETTERS ===================
     public void setId(Long id) { this.id = id; }
@@ -80,4 +88,5 @@ public class Report {
     public void setPublicizeIssue(Integer publicizeIssue) { this.publicizeIssue = publicizeIssue; }
     public void setShowName(Integer showName) { this.showName = showName; }
     public void setStatus(String status) { this.status = status; }
+    public void setSeverity(String severity) {this.severity = severity;}
 }

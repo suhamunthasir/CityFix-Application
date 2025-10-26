@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Dashboard - CityFix Admin</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            success: "#2ecc71",
+            danger: "#e74c3c",
+            warning: "#f39c12",
+            info: "#9b59b6"
+          },
+          fontFamily: { display: ["Public Sans", "sans-serif"] },
+        },
+      },
+    };
+  </script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="cityStyle.css" />
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+
+  <div class="relative flex min-h-screen w-full flex-row overflow-x-hidden">
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">home_repair_service</span>
+        <h2 class="text-lg font-bold">Admin</h2>
+      </div>
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="dashboard.html" class="nav-link active">
+          <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="superadminMap.html" class="nav-link">
+          <span class="material-symbols-outlined">location_city</span> Report Map
+        </a>
+        <a href="City.html" class="nav-link">
+          <span class="material-symbols-outlined">group</span> User Management
+        </a>
+        <a href="department.html" class="nav-link">
+          <span class="material-symbols-outlined">corporate_fare</span> Departments
+        </a>
+        <a href="announcement.html" class="nav-link">
+          <span class="material-symbols-outlined">campaign</span> Announcements
+        </a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDq-bEdeQvTUFQfGMmcdZHf-1RELAjituhWCp0i71NeNRWpBXweCIYIug7qIkEUGtL45xucaVl5qP3zzxpgiqWsamZkGBLmoptGaghq_mInRZVvvohj-5amHhgzjuaWCXgi94_oCErfMKaNQEQ7Hqywb-7IhsqJRLsTDi3CClTiZfHZIgZDE_G0H5zv2yHN8szc7-lTxcvrYPSOaw7twEzfKTT6sjQEaUrwaD3I1a8XrDRU6njzRGnXA_yerjoSexW6a1wiJxNv');"></div>
+        <div>
+          <p class="text-sm font-medium">Super Admin</p>
+          <p class="text-xs text-gray-500">superadmin@google.com</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col">
+      <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">Dashboard</h2>
+        <div class="flex gap-4">
+          <a href="index.html" id="logoutBtn"
+            class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+          </a>
+          <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+            <span class="text-sm font-medium">Dark Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="px-10 py-6 flex-1">
+        <h1 class="text-2xl font-bold mb-6">CityFix Live Dashboard</h1>
+
+        <!-- Filters -->
+        <div class="mb-6 flex gap-3">
+          <label class="font-medium text-gray-600 dark:text-gray-300">Filter By:</label>
+          <select id="timeFilter" class="border rounded p-1 dark:bg-[#1c2632] dark:text-white">
+            <option value="day">Today</option>
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+          <div class="bg-white dark:bg-[#1c2632] shadow rounded-xl p-5">
+            <h3 class="text-gray-500 text-sm">Total Reports</h3>
+            <p id="totalReports" class="text-3xl font-bold text-primary mt-2">0</p>
+          </div>
+          <div class="bg-white dark:bg-[#1c2632] shadow rounded-xl p-5">
+            <h3 class="text-gray-500 text-sm">Resolved</h3>
+            <p id="resolvedReports" class="text-3xl font-bold text-success mt-2">0</p>
+          </div>
+          <div class="bg-white dark:bg-[#1c2632] shadow rounded-xl p-5">
+            <h3 class="text-gray-500 text-sm">In Progress</h3>
+            <p id="inProgressReports" class="text-3xl font-bold text-warning mt-2">0</p>
+          </div>
+          <div class="bg-white dark:bg-[#1c2632] shadow rounded-xl p-5">
+            <h3 class="text-gray-500 text-sm">Pending</h3>
+            <p id="pendingReports" class="text-3xl font-bold text-danger mt-2">0</p>
+          </div>
+          <div class="bg-white dark:bg-[#1c2632] shadow rounded-xl p-5">
+            <h3 class="text-gray-500 text-sm">High Severity</h3>
+            <p id="highSeverity" class="text-3xl font-bold text-info mt-2">0</p>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white dark:bg-[#1c2632] p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-3">Issue Trend Over Time</h3>
+            <canvas id="trendChart" height="150"></canvas>
+          </div>
+          <div class="bg-white dark:bg-[#1c2632] p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-3">Severity Distribution</h3>
+            <canvas id="severityChart" height="150"></canvas>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white dark:bg-[#1c2632] p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-3">Resolution Metrics</h3>
+            <canvas id="resolutionChart" height="150"></canvas>
+          </div>
+          <div class="bg-white dark:bg-[#1c2632] p-5 rounded-xl shadow">
+            <h3 class="font-semibold mb-3">Category Distribution</h3>
+            <canvas id="categoryChart" height="150"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Reports Table -->
+        <div class="bg-white dark:bg-[#1c2632] p-5 rounded-xl shadow mt-6">
+          <h3 class="font-semibold mb-3">Recent Reports</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full table-auto border-collapse">
+              <thead class="bg-gray-100 dark:bg-[#141f2b]">
+                <tr>
+                  <th class="p-2 text-left">Title</th>
+                  <th class="p-2 text-left">Category</th>
+                  <th class="p-2 text-left">Status</th>
+                  <th class="p-2 text-left">Severity</th>
+                  <th class="p-2 text-left">Date</th>
+                </tr>
+              </thead>
+              <tbody id="recentReports"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8080/api/reports";
+let allReports = [];
+
+let severityChart, resolutionChart, categoryChart, trendChart;
+
+function animateValue(id, start, end, duration = 800) {
+  const obj = document.getElementById(id);
+  let startTimestamp = null;
+  const step = timestamp => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    obj.innerText = Math.floor(progress * (end - start) + start);
+    if (progress < 1) window.requestAnimationFrame(step);
+  };
+  window.requestAnimationFrame(step);
+}
+
+async function fetchReports() {
+  const res = await fetch(API_BASE + "/");
+  let reports = await res.json();
+  if (!Array.isArray(reports)) {
+    if (reports.content) reports = reports.content;
+    else if (reports.data) reports = reports.data;
+    else if (reports.reports) reports = reports.reports;
+  }
+  allReports = reports;
+  updateDashboard(true);
+}
+
+function filterReportsByTimeframe(reports, timeframe) {
+  const now = new Date();
+  return reports.filter(r => {
+    if (!r.submittedDate) return false;
+    const d = new Date(r.submittedDate);
+    switch (timeframe) {
+      case "day": return d.toDateString() === now.toDateString();
+      case "week": {
+        const start = new Date(now); start.setDate(now.getDate() - now.getDay());
+        return d >= start;
+      }
+      case "month": return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      case "year": return d.getFullYear() === now.getFullYear();
+    }
+    return true;
+  });
+}
+
+function updateDashboard(initial=false) {
+  const timeframe = document.getElementById("timeFilter").value;
+  const reports = filterReportsByTimeframe(allReports, timeframe);
+
+  // KPIs
+  const total = reports.length;
+  const resolved = reports.filter(r => r.status === "Resolved").length;
+  const inProgress = reports.filter(r => r.status === "In Progress").length;
+  const pending = reports.filter(r => r.status === "Pending").length;
+  const highSeverity = reports.filter(r => r.severity === "High").length;
+
+  animateValue("totalReports", parseInt(document.getElementById("totalReports").innerText)||0, total);
+  animateValue("resolvedReports", parseInt(document.getElementById("resolvedReports").innerText)||0, resolved);
+  animateValue("inProgressReports", parseInt(document.getElementById("inProgressReports").innerText)||0, inProgress);
+  animateValue("pendingReports", parseInt(document.getElementById("pendingReports").innerText)||0, pending);
+  animateValue("highSeverity", parseInt(document.getElementById("highSeverity").innerText)||0, highSeverity);
+
+  // Chart Data
+ const sevCounts = { High:0, Medium:0, Low:0, "Not Mentioned": 0 };
+reports.forEach(r => { 
+  let s = r.severity;
+  if (!s || s.toLowerCase() === "not mentioned") {
+    s = "Not Mentioned"; // unify null and "Not Mentioned"
+  }
+  sevCounts[s] = (sevCounts[s] || 0) + 1;
+});
+
+  const catCounts = {};
+  reports.forEach(r => { const c=r.problemCategory||"Unknown"; catCounts[c]=(catCounts[c]||0)+1; });
+
+  const days=30;
+  const trendData=Array(days).fill(0);
+  const labels=[];
+  for(let i=0;i<days;i++){
+    const d=new Date(); d.setDate(d.getDate()-days+i+1);
+    labels.push(d.toLocaleDateString());
+    trendData[i]=reports.filter(r=>new Date(r.submittedDate).toDateString()===d.toDateString()).length;
+  }
+
+  // Initialize Charts if first load
+  if(initial){
+    severityChart = new Chart(document.getElementById("severityChart"), {
+      type: 'doughnut',
+      data: { labels: Object.keys(sevCounts), datasets:[{ data:Object.values(sevCounts), backgroundColor:['#e74c3c','#f39c12','#2ecc71','#95a5a6'] }] },
+      options:{ responsive:true }
+    });
+
+    resolutionChart = new Chart(document.getElementById("resolutionChart"), {
+      type:'bar',
+      data:{ labels:['Resolved','In Progress','Pending'], datasets:[{ data:[resolved,inProgress,pending], backgroundColor:['#2ecc71','#f39c12','#e74c3c'] }] },
+      options:{ responsive:true }
+    });
+
+    categoryChart = new Chart(document.getElementById("categoryChart"), {
+      type:'bar',
+      data:{ labels:Object.keys(catCounts), datasets:[{ data:Object.values(catCounts), backgroundColor:'#3498db' }] },
+      options:{ responsive:true, plugins:{ legend:{ display:false } } }
+    });
+
+    trendChart = new Chart(document.getElementById("trendChart"), {
+      type:'line',
+      data:{ labels, datasets:[{ data:trendData, borderColor:'#3498db', fill:true, backgroundColor:'rgba(52,152,219,0.2)'}] },
+      options:{ responsive:true }
+    });
+  } else {
+    // Update charts dynamically
+    severityChart.data.datasets[0].data = Object.values(sevCounts);
+    severityChart.update();
+    resolutionChart.data.datasets[0].data = [resolved,inProgress,pending];
+    resolutionChart.update();
+    categoryChart.data.labels = Object.keys(catCounts);
+    categoryChart.data.datasets[0].data = Object.values(catCounts);
+    categoryChart.update();
+    trendChart.data.datasets[0].data = trendData;
+    trendChart.update();
+  }
+
+  // Recent reports
+  const tbody=document.getElementById("recentReports");
+  tbody.innerHTML="";
+  reports.sort((a,b)=>new Date(b.submittedDate)-new Date(a.submittedDate)).slice(0,10).forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.className="border-b border-gray-200 dark:border-gray-700 transition-all";
+    tr.innerHTML=`<td class="p-2">${r.problemTitle||"N/A"}</td>
+                  <td class="p-2">${r.problemCategory||"N/A"}</td>
+                  <td class="p-2">${r.status||"Pending"}</td>
+                  <td class="p-2">${r.severity||"Medium"}</td>
+                  <td class="p-2">${r.submittedDate?new Date(r.submittedDate).toLocaleString():"N/A"}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById("timeFilter").addEventListener("change", ()=>updateDashboard());
+fetchReports();
+setInterval(fetchReports, 30000);
+
+  </script>
+
+  <script src="darkmode.js"></script>
+</body>
+</html>

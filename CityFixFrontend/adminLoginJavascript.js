@@ -96,29 +96,43 @@ if(role === "CITY_ADMIN") {
         alert(err.message);
     });
 }
- else if(role === "DEPARTMENT_MANAGER"){
-            fetch("http://localhost:8080/api/department-managers")
-            .then(res => res.json())
-            .then(managers => {
-                const manager = managers.find(m => m.email === email && m.password === password);
-                if(manager){
-                    const managerData = {
-                        id: manager.id,
-                        firstName: manager.fullName.split(" ")[0],
-                        lastName: manager.fullName.split(" ")[1] || "",
-                        email: manager.email,
-                        role: "DEPARTMENT_MANAGER"
-                    };
-                    localStorage.setItem("loggedInUser", JSON.stringify(managerData));
-                    window.location.href = "departmentDashboard.html";
-                } else {
-                    alert("Invalid Department Manager credentials.");
-                }
-            })
-            .catch(err => alert("Failed to connect to server: " + err.message));
+ else if (role === "DEPARTMENT_MANAGER") {
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
 
-        } else {
-            alert("Invalid role selected.");
-        }
+    fetch("http://localhost:8080/api/department-managers")
+        .then(res => {
+            if (res.status === 200) return res.json();
+            else if (res.status === 401) throw new Error("Invalid Department Manager credentials.");
+            else throw new Error("Unexpected server error: " + res.status);
+        })
+        .then(managers => {
+            // Find the manager matching email and password
+            const manager = managers.find(m => m.email === email && m.password === password);
+            if (!manager) throw new Error("Invalid Department Manager credentials.");
+
+            const managerData = {
+                id: manager.id,
+                firstName: manager.fullName.split(" ")[0],
+                lastName: manager.fullName.split(" ")[1] || "",
+                email: manager.email,
+                role: "DEPARTMENT_MANAGER",
+                department: manager.department,
+                cityAssigned: manager.city || ""  // <-- now stored correctly
+            };
+
+            // Save to localStorage
+            localStorage.setItem("loggedInUser", JSON.stringify(managerData));
+
+            // Redirect to report management page
+            window.location.href = "reportmanagement.html";
+        })
+        .catch(err => {
+            alert(err.message);
+        });
+}
+
+ 
     });
 });

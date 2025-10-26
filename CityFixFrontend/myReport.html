@@ -1,3 +1,7 @@
+<!-- ==========================================
+File: my-reports.html
+Keep layout exactly as user provided. Added a modal for viewing/updating reports (doesn't change layout flow).
+========================================== -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +12,7 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
      <link rel="stylesheet" href="style.css">
     <style>
+        /* (THE ENTIRE ORIGINAL STYLE BLOCK FROM THE USER KEPT EXACTLY THE SAME) */
         /* Reset and Base Styles */
         * {
             margin: 0;
@@ -509,6 +514,31 @@
                 flex-direction: column;
             }
         }
+
+        /* Modal (kept minimal so layout isn't changed) */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal {
+            background: #fff;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem }
+        .modal .modal-body { display:grid; grid-template-columns: 1fr 1fr; gap:1rem }
+        .modal .modal-body .col { display:flex; flex-direction:column; gap:0.5rem }
+        .modal .modal-footer { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem }
+        .readonly { background:#f2f2f2 }
     </style>
 </head>
 <body>
@@ -543,21 +573,21 @@
     <!-- Dashboard Stats -->
     <div class="container">
         <div class="dashboard-stats">
-            <div class="stat-card stat-open">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Open Reports</div>
+            <div class="stat-card stat-allReports">
+                <div class="stat-number" id="count-all">0</div>
+                <div class="stat-label">All Reports</div>
+            </div>
+            <div class="stat-card stat-pending">
+                <div class="stat-number" id="count-pending">0</div>
+                <div class="stat-label">Pending</div>
             </div>
             <div class="stat-card stat-progress">
-                <div class="stat-number">5</div>
+                <div class="stat-number" id="count-inprogress">0</div>
                 <div class="stat-label">In Progress</div>
             </div>
-            <div class="stat-card stat-fixed">
-                <div class="stat-number">23</div>
-                <div class="stat-label">Fixed</div>
-            </div>
-            <div class="stat-card stat-closed">
-                <div class="stat-number">7</div>
-                <div class="stat-label">Closed</div>
+            <div class="stat-card stat-Resolved">
+                <div class="stat-number" id="count-resolved">0</div>
+                <div class="stat-label">Resolved</div>
             </div>
         </div>
     </div>
@@ -566,11 +596,11 @@
     <div class="container">
         <div class="reports-controls">
             <div class="filter-options">
-                <button class="filter-button active" data-filter="all">All Reports</button>
-                <button class="filter-button" data-filter="open">Open</button>
-                <button class="filter-button" data-filter="progress">In Progress</button>
-                <button class="filter-button" data-filter="fixed">Fixed</button>
-                <button class="filter-button" data-filter="closed">Closed</button>
+             
+                <button class="filter-button" data-filter="all">All Reports</button>
+                <button class="filter-button" data-filter="Pending">Pending</button>
+                <button class="filter-button" data-filter="In Progress">In Progress</button>
+                <button class="filter-button" data-filter="Resolved">Resolved</button>
             </div>
             <div class="search-box">
                 <input type="text" placeholder="Search my reports...">
@@ -592,7 +622,54 @@
                 <i>📝</i>
                 <h3>No reports found</h3>
                 <p>You haven't submitted any reports yet, or no reports match your current filters.</p>
-                <a href="report-problem.html" class="action-button primary" style="display: inline-block; margin-top: 1rem;">Report Your First Problem</a>
+                <a href="report.html" class="action-button primary" style="display: inline-block; margin-top: 1rem;">Report Your First Problem</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing/updating a report -->
+    <div class="modal-backdrop" id="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-header">
+                <h3 id="modal-title">Report Details</h3>
+                <button id="modal-close" class="action-button">Close</button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <label>Title</label>
+                    <input id="modal-title-input" type="text">
+
+                    <label>Category</label>
+                    <input id="modal-category-input" type="text" readonly class="readonly">
+
+                    <label>Reference</label>
+                    <input id="modal-ref-input" type="text" readonly class="readonly">
+
+                    <label>Status</label>
+                    <input id="modal-status-input" type="text" readonly class="readonly">
+
+                    <label>Submitted Date</label>
+                    <input id="modal-date-input" type="text" readonly class="readonly">
+
+                    <label>Feedback (add your feedback for the report)</label>
+                    <textarea id="modal-feedback-input" rows="3" placeholder="Write feedback..."></textarea>
+                    <button id="modal-save-feedback" class="action-button primary">Save Feedback</button>
+                </div>
+                <div class="col">
+                    <label>Description</label>
+                    <textarea id="modal-description-input" rows="6"></textarea>
+
+                    <label>Photos</label>
+                    <div id="modal-photos" style="display:flex; gap:0.5rem; flex-wrap:wrap"></div>
+
+                    <div style="margin-top:1rem; display:flex; gap:0.5rem;">
+                        <button id="modal-update-btn" class="action-button primary">Update Report</button>
+                        <button id="modal-delete-btn" class="action-button">Delete Report</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <small style="color:#666">Note: Status cannot be changed from this screen.</small>
             </div>
         </div>
     </div>
@@ -604,83 +681,10 @@
         </div>
     </footer>
 
-    <script>
-        // Filter functionality
-        document.querySelectorAll('.filter-button').forEach(button => {
-            button.addEventListener('click', function() {
-                // Update active button
-                document.querySelectorAll('.filter-button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                const filter = this.getAttribute('data-filter');
-                const reportItems = document.querySelectorAll('.report-item');
-                let visibleItems = 0;
-                
-                // Show/hide items based on filter
-                reportItems.forEach(item => {
-                    if (filter === 'all' || item.getAttribute('data-status') === filter) {
-                        item.style.display = 'block';
-                        visibleItems++;
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-                
-                // Show empty state if no items visible
-                const emptyState = document.getElementById('empty-state');
-                if (visibleItems === 0) {
-                    emptyState.style.display = 'block';
-                } else {
-                    emptyState.style.display = 'none';
-                }
-            });
-        });
-        
-        // Search functionality
-        document.querySelector('.search-box button').addEventListener('click', function() {
-            const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
-            const reportItems = document.querySelectorAll('.report-item');
-            let visibleItems = 0;
-            
-            reportItems.forEach(item => {
-                const title = item.querySelector('.report-title').textContent.toLowerCase();
-                const description = item.querySelector('.report-description').textContent.toLowerCase();
-                
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    item.style.display = 'block';
-                    visibleItems++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-            
-            // Show empty state if no items visible
-            const emptyState = document.getElementById('empty-state');
-            if (visibleItems === 0) {
-                emptyState.style.display = 'block';
-            } else {
-                emptyState.style.display = 'none';
-            }
-        });
-        
-        // Allow pressing Enter to search
-        document.querySelector('.search-box input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.querySelector('.search-box button').click();
-            }
-        });
-        
-        // Action button functionality
-        document.querySelectorAll('.action-button.primary').forEach(button => {
-            button.addEventListener('click', function() {
-                const reportTitle = this.closest('.report-item').querySelector('.report-title').textContent;
-                alert(`Viewing details for: ${reportTitle}`);
-                // In a real implementation, this would navigate to the report details page
-            });
-        });
-    </script>
-        <script src="myReportJavascript.js"></script>
+    <!-- Scripts -->
+    <script src="myReportJavascript.js"></script>
 </body>
 </html>
+
+
+

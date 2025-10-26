@@ -506,4 +506,4 @@ document.addEventListener("DOMContentLoaded", function () {
         var _a;
         (_a = document.getElementById("popupMessage")) === null || _a === void 0 ? void 0 : _a.classList.add("hidden");
     });
-});
+});  

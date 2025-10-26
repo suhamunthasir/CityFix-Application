@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City Reports - CityFix</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <link rel="stylesheet" href="cityStyle.css" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3498db",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+            success: "#2ecc71",
+            danger: "#e74c3c",
+            warning: "#f39c12",
+          },
+          fontFamily: {
+            display: ["Public Sans", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    #map { height: 80vh; width: 100%; border-radius: 12px; }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white">
+
+  <div class="relative flex h-auto min-h-screen w-full flex-row overflow-x-hidden">
+
+    <!-- Sidebar -->
+    <aside class="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark border-r border-[#dbe0e6] dark:border-[#2e3a47] w-64">
+      <div class="flex items-center gap-4 text-primary">
+        <span class="material-symbols-outlined text-3xl">domain</span>
+        <h2 class="text-lg font-bold">City Admin</h2>
+      </div>
+
+      <nav class="flex flex-col gap-2 flex-1">
+        <a href="cityManager.html" class="nav-link">
+          <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="departmentManage.html" class="nav-link">
+          <span class="material-symbols-outlined">group</span>Manage Staff
+        </a>
+        <a href="#" class="nav-link active">
+          <span class="material-symbols-outlined">report</span> Report Map
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3 mt-auto">
+        <div class="bg-cover bg-center rounded-full size-10" style="background-image:url('https://cdn-icons-png.flaticon.com/512/2202/2202112.png');"></div>
+        <div>
+          <p id="userName" class="text-sm font-medium">City Admin</p>
+          <p id="userEmail" class="text-xs text-gray-500">cityadmin@cityfix.lk</p>
+          <p id="userCity" class="text-xs text-gray-400"></p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <header class="flex items-center justify-between border-b border-[#dbe0e6] dark:border-[#2e3a47] px-10 py-3 bg-white dark:bg-background-dark">
+        <h2 class="text-lg font-bold">City Reports Map</h2>
+        <div class="flex gap-4">
+          <a href="index.html" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+          </a>
+          <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#2a3540] transition">
+            <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+            <span class="text-sm font-medium">Dark Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="px-10 py-6 flex-1 space-y-6">
+        <div id="map"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+const cityCoordinates = {
+  Colombo: { lat: 6.9271, lon: 79.8612 },
+  "Dehiwala-Mount Lavinia": { lat: 6.8644, lon: 79.9712 },
+  "Sri Jayawardenepura Kotte": { lat: 6.9271, lon: 79.9734 },
+  Kaduwela: { lat: 6.9744, lon: 79.9744 },
+  Moratuwa: { lat: 6.7493, lon: 79.9786 },
+  Gampaha: { lat: 7.0903, lon: 80.0220 },
+  Kalutara: { lat: 6.5745, lon: 79.9685 },
+  Matale: { lat: 7.4600, lon: 80.6333 },
+  Kandy: { lat: 7.2906, lon: 80.6337 },
+  Kurunegala: { lat: 7.4678, lon: 80.3505 },
+  Anuradhapura: { lat: 8.3110, lon: 80.4037 },
+  Badulla: { lat: 6.9864, lon: 81.0532 },
+  Bandarawela: { lat: 6.8286, lon: 81.0504 },
+  Batticaloa: { lat: 7.7110, lon: 81.7011 },
+  Galle: { lat: 6.0535, lon: 80.2200 },
+  Jaffna: { lat: 9.6615, lon: 80.0225 },
+  Matara: { lat: 5.9489, lon: 80.5385 },
+  Negombo: { lat: 7.2089, lon: 79.9735 },
+  "Nuwara Eliya": { lat: 6.9486, lon: 80.7900 },
+  Panadura: { lat: 6.6300, lon: 79.9670 },
+  "Point Pedro": { lat: 9.7750, lon: 80.5150 },
+  Vavuniya: { lat: 8.7510, lon: 80.5070 },
+  Kalmunai: { lat: 7.4230, lon: 81.7710 },
+  Akkaraipattu: { lat: 7.3870, lon: 81.7610 },
+  Trincomalee: { lat: 8.5650, lon: 81.2330 },
+  Polonnaruwa: { lat: 7.9333, lon: 81.0000 }
+};
+
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const userData = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!userData) return window.location.href = "signin.html";
+
+    document.getElementById("userName").textContent = userData.firstName + (userData.lastName ? " " + userData.lastName : "");
+    document.getElementById("userEmail").textContent = userData.email;
+    if(userData.cityAssigned){
+      document.getElementById("userCity").textContent = "City: " + userData.cityAssigned;
+    }
+
+    const cityAssigned = userData.cityAssigned;
+    const cityCoord = cityCoordinates[cityAssigned] || { lat: 6.9271, lon: 79.8612 }; // default Colombo
+
+    // Initialize Leaflet map
+    const map = L.map('map').setView([cityCoord.lat, cityCoord.lon], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Fetch reports from backend
+    try {
+      const response = await fetch('http://localhost:8080/api/reports/');
+      const reports = await response.json();
+
+      // Optional: filter reports by city radius
+      function distance(lat1, lon1, lat2, lon2){
+        const R = 6371;
+        const dLat = (lat2-lat1)*Math.PI/180;
+        const dLon = (lon2-lon1)*Math.PI/180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+      }
+
+      const filteredReports = reports.filter(r => distance(r.latitude,r.longitude,cityCoord.lat,cityCoord.lon)<=5);
+
+      // Marker colors based on status
+      const statusColors = { resolved: 'green', pending: 'orange', new: 'red' };
+
+      filteredReports.forEach(r => {
+        const color = statusColors[r.status.toLowerCase()] || 'blue';
+        const marker = L.circleMarker([r.latitude, r.longitude], {
+          radius: 8,
+          fillColor: color,
+          color: '#000',
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        }).addTo(map);
+
+        marker.bindPopup(`
+          <b>${r.problemTitle}</b><br/>
+          Category: ${r.problemCategory}<br/>
+          Status: ${r.status}<br/>
+          Submitted: ${r.submittedDate}<br/>
+          Citizen: ${r.citizen?.firstName || 'N/A'}
+        `);
+      });
+
+    } catch (err) {
+      console.error('Failed to load reports:', err);
+      alert('Failed to load reports');
+    }
+  });
+  </script>
+
+  <script src="darkmode.js"></script>
+</body>
+</html>

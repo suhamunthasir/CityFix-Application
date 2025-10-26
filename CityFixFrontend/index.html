@@ -1,556 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CityFix - Report Local Problems in Sri Lanka</title>
-   <style>
-    /* Reset and Base Styles */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-  body {
-    background-color: #fff4e6; /* light orange background */
-    color: #333;
-    line-height: 1.6;
-}
-    
-    a {
-        text-decoration: none;
-        color: inherit;
-    }
-    
-    /* Header Styles */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFix - Report Local Problems in Sri Lanka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background: #fdfcfb; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* Header */
     header {
-        background-color: #333; /* dark grey */
-        color: white;
-        padding: 1rem 0;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.85);
+      position: sticky; top: 0; z-index: 100;
+      padding: 1rem 0; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
-    
-    .container {
-        width: 90%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .logo {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #e67e22; /* orange */
-    }
-    
-    .logo span {
-        color: #e74c3c; /* red */
-    }
-    
-    nav ul {
-        display: flex;
-        list-style: none;
-    }
-    
-    nav ul li {
-        margin-left: 1.5rem;
-    }
-    
-    nav ul li a {
-        color: white;
-        padding: 0.5rem 0.8rem;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-    }
-    
-    nav ul li a:hover {
-        background-color: #555; /* lighter grey */
-    }
-    
+    .container { width: 90%; max-width: 1200px; margin: auto; }
+    .header-container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 2rem; font-weight: 700; color: #f39c12; }
+    .logo span { color: #e74c3c; }
+    nav ul { display: flex; list-style: none; gap: 1rem; }
+    nav ul li a { padding: 0.6rem 1rem; border-radius: 6px; transition: 0.3s; color: #fff; }
+    nav ul li a:hover { background: #f39c12; color: #fff; }
+
     /* Hero Section */
     .hero {
-        background: linear-gradient(rgba(51, 51, 51, 0.85), rgba(51, 51, 51, 0.85)), 
-                    url('https://images.unsplash.com/photo-1528181304800-259b08848526?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 3rem 0;
-        text-align: center;
+      background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
+      position: relative;
+      padding: 1rem 2rem;
+      text-align: center;
+      color: white;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
     }
-    
-    .hero h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
+    .hero::after {
+      content: "";
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 0;
     }
-    
-    .hero p {
-        font-size: 1.2rem;
-        max-width: 700px;
-        margin: 0 auto 2rem;
-    }
-    
-    .search-box {
-        background: #eaeaea; /* soft grey instead of white */
-        border-radius: 8px;
-        padding: 1.5rem;
-        max-width: 600px;
-        margin: 0 auto;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    
-    .search-box input {
-        width: 70%;
-        padding: 0.8rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 1rem;
-    }
-    
-    .search-box button {
-        background-color: #e67e22; /* orange */
-        color: white;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        margin-left: 0.5rem;
-        transition: background-color 0.3s;
-    }
-    
-    .search-box button:hover {
-        background-color: #d35400; /* darker orange */
-    }
-    
-    .use-location {
-        display: block;
-        margin-top: 1rem;
-        color: #e74c3c; /* red */
-        cursor: pointer;
-    }
-    
-    /* How it Works Section */
+    .hero h1, .hero p { position: relative; z-index: 1; }
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; animation: fadeUp 1s ease forwards; opacity: 0; }
+    .hero p { font-size: 1.2rem; max-width: 700px; text-align: center; animation: fadeUp 1s ease 0.3s forwards; opacity: 0; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* How It Works */
     .how-it-works {
-        padding: 3rem 0;
-        background-color: #f0f0f0; /* light grey */
+      background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
+      position: relative;
+      padding: 9rem 2rem;
+      color: #fff;
     }
-    
-    .section-title {
-        text-align: center;
-        margin-bottom: 2rem;
-        color: #333; /* dark grey */
+    .how-it-works::after {
+      content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.6); z-index: 0;
     }
-    
-    .steps {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
-    
-    .step {
-        flex: 1;
-        min-width: 250px;
-        text-align: center;
-        padding: 1rem;
-        margin: 0.5rem;
-    }
-    
-    .step-number {
-        background-color: #e67e22; /* orange */
-        color: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-        font-weight: bold;
-    }
-    
-    /* Stats Section */
+    .how-it-works .container { position: relative; z-index: 1; }
+    .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; }
+    .steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; }
+    .step { flex:1; max-width: 260px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem 1.5rem; text-align:center; box-shadow: 0 6px 15px rgba(0,0,0,0.3); transition: 0.4s; }
+    .step:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+    .step-number { background: #f39c12; color: #fff; width: 50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-weight:bold; font-size:1.2rem; }
+
+    /* Stats */
     .stats {
-        background-color: #333; /* dark grey */
-        color: white;
-        padding: 2rem 0;
-        text-align: center;
+      background: url('https://images.unsplash.com/photo-1581091215360-6e71efb2fa94?auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
+      position: relative; padding: 4rem 2rem; color: #fff; text-align: center;
     }
-    
-    .stats-container {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
-    
-    .stat-item {
-        margin: 1rem;
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #e74c3c; /* red */
-    }
-    
-    /* Recent Problems Section */
-    .recent-problems {
-        padding: 3rem 0;
-        background-color: #eaeaea; /* grey instead of white */
-    }
-    
-    .recent-problems .problems-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    .recent-problems .problem-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.8rem;
-        background: #f7f7f7; /* light grey card */
-        border-left: 5px solid #e67e22; /* orange */
-        border-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        transition: 0.3s;
-        cursor: pointer;
-    }
-    
-    .recent-problems .problem-item:hover {
-        background: #fceae6; /* very light orange on hover */
-        border-left-color: #e74c3c; /* red */
-    }
-    
-    .recent-problems .problem-info {
-        flex: 1;
-        padding-right: 0.8rem;
-    }
-    
-    .recent-problems .problem-title {
-        font-weight: bold;
-        color: #333;
-    }
-    
-    .recent-problems .problem-time {
-        font-size: 0.9rem;
-        color: #666;
-    }
-    
-    .recent-problems .problem-image {
-        width: 80px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-    
-    /* Info Sections */
-    .info-sections {
-        padding: 3rem 0;
-        background-color: #f0f0f0; /* grey instead of white */
-    }
-    
-    .info-container {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
-    
-    .info-box {
-        flex: 1;
-        min-width: 300px;
-        padding: 1.5rem;
-        margin: 1rem;
-        background-color: #f7f7f7; /* card grey */
-        border-radius: 8px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    
-    .info-box h3 {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-    
-    .info-box p {
-        margin-bottom: 1.5rem;
-    }
-    
-    .info-box button {
-        background-color: #e67e22; /* orange */
-        color: white;
-        border: none;
-        padding: 0.7rem 1.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    
-    .info-box button:hover {
-        background-color: #d35400; /* darker orange */
-    }
+    .stats::after { content:""; position:absolute; top:0; left:0;width:100%; height:100%; background: rgba(0,0,0,0.6); z-index:0; }
+    .stats-container { display:flex; justify-content:center; flex-wrap:wrap; gap:2rem; position: relative; z-index:1; }
+    .stat-item { flex:1; min-width:200px; }
+    .stat-number { font-size: 2.5rem; font-weight:700; color: #f39c12; animation: counter 2s ease forwards; }
+
+    /* Recent Problems */
+    .recent-problems { padding:5rem 2rem; background:#f5f6fa; }
+    .problems-list { max-width: 900px; margin:auto; display:flex; flex-direction:column; gap:1rem; }
+    .problem-item { background:white; display:flex; justify-content:space-between; align-items:center; padding:1rem; border-left:6px solid #f39c12; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor:pointer; transition:0.3s; }
+    .problem-item:hover { transform: scale(1.02); border-left-color: #e74c3c; }
+    .problem-info { flex:1; padding-right:1rem; }
+    .problem-title { font-weight:600; color:#2c3e50; }
+    .problem-time { font-size:0.9rem; color:#666; }
+    .problem-image { width:90px; height:70px; object-fit:cover; border-radius:8px; }
+
+    /* Info Boxes */
+    .info-sections { background:#fffaf5; padding:5rem 2rem; }
+    .info-container { display:flex; justify-content:center; flex-wrap:wrap; gap:2rem; }
+    .info-box { flex:1; max-width:350px; background:white; border-radius:12px; padding:2rem; text-align:center; box-shadow:0 6px 15px rgba(0,0,0,0.15); transition:0.3s; }
+    .info-box:hover { transform:translateY(-8px); box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+    .info-box h3 { color:#e67e22; margin-bottom:1rem; }
+    .info-box button { background:linear-gradient(135deg,#f39c12,#e74c3c); color:white; border:none; padding:0.8rem 1.8rem; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s; }
+    .info-box button:hover { opacity:0.9; }
+.recent-problems {
+  position: relative;
+  padding: 5rem 2rem;
+  color: #fff;
+   background: url('file:///C:/Users/suham/Pictures/Screenshots/Screenshot%202025-10-25%20232722.png') center/cover no-repeat;
+}
+
+.recent-problems::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3); /* overlay for readability */
+  z-index: 0;
+}
+
+.problems-list, .section-title {
+  position: relative;
+  z-index: 1;
+}
+.problem-item {
+  background: white;
+  color: #333; /* ✅ Dark text */
+}
+.problem-item .problem-title {
+  color: #2c3e50; /* Optional: stronger contrast for titles */
+}
+
     
     /* Footer */
     footer {
-        background-color: #333; /* dark grey */
-        color: white;
-        padding: 2rem 0;
-        text-align: center;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .header-container {
-            flex-direction: column;
-        }
-        
-        nav ul {
-            margin-top: 1rem;
-        }
-        
-        .search-box input {
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-        
-        .search-box button {
-            width: 100%;
-            margin-left: 0;
-        }
-    }
-</style>
+ background-color: #757474; /* dark gray background */
+  color: rgb(45, 43, 43);             /* text color */
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  position: relative;
+}
 
+/* Optional: dark overlay for text readability */
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* semi-transparent black */
+  z-index: 0;
+}
+
+footer p {
+  position: relative;
+  z-index: 1; /* ensures text appears above overlay */
+}
+
+    /* Responsive */
+    @media(max-width:768px){
+      .header-container { flex-direction:column; gap:1rem; }
+      .steps, .info-container { flex-direction:column; }
+      .problem-item { flex-direction:column; align-items:flex-start; }
+      .problem-image { width:100%; height:200px; margin-top:0.5rem; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header with Navigation -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">City<span>Fix</span></div>
-            <nav>
-                <ul>
-                    <li><a href="signIn.html">Sign In</a></li>
-                    <li><a href="allReport.html">All Reports</a></li>
-                    <li><a href="localReport.html">Local Reports</a></li>
-                    <li><a href="help.html" id="helpLink">Help</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <header>
+    <div class="container header-container">
+      <div class="logo">City<span>Fix</span></div>
+      <nav>
+        <ul>
+          <li><a href="signIn.html">Sign In</a></li>
+          <li><a href="allReport.html">All Reports</a></li>
+          <li><a href="localReport.html">Announcements</a></li>
+          <li><a href="help.html" id="helpLink">Help</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Hero Section with Search -->
-    <section class="hero">
-        <div class="container">
-            <h1>Report, view, or discuss local problems in Sri Lanka</h1>
-            <p>Report issues like potholes, broken streetlights, garbage collection, or damaged public property in your area.</p>
-            
-            <div class="search-box">
-                <input type="text" placeholder="Enter a Sri Lankan location (e.g., 'Colombo 07') ">
-                <button id="goButton">Go</button>
-                <a href="#" class="use-location">Use my current location</a>
-            </div>
-        </div>
-    </section>
+  <section class="hero">
+    <h1>Report, view, or discuss local problems in Sri Lanka</h1>
+    <p>Spot a pothole, broken light, or waste issue? Report it now — let's make our cities better together.</p>
+  </section>
 
-    <!-- How it Works Section -->
-    <section class="how-it-works">
-        <div class="container">
-            <h2 class="section-title">How to report a problem</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Enter a Sri Lankan location</h3>
-                    <p>Provide a location in Sri Lanka where the problem exists</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Locate the problem on a map</h3>
-                    <p>Pinpoint the exact location of the issue on our interactive map</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Enter details of the problem</h3>
-                    <p>Describe the issue and add photos if possible</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>We notify the relevant authorities</h3>
-                    <p>We send your report to the local municipal council on your behalf</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="container stats-container">
-            <div class="stat-item">
-                <div class="stat-number">21,988</div>
-                <p>reports in past week</p>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">50,021</div>
-                <p>fixed in past month</p>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">12,815,722</div>
-                <p>updates on reports</p>
-            </div>
-        </div>
-    </section>
-
-  <!-- Recent Problems Section -->
-<section class="recent-problems">
-  <div class="container">
-    <h2 class="section-title">Recently reported problems</h2>
-    <div class="problems-list">
-      <div class="problem-item" data-problem-id="1">
-        <div class="problem-info">
-          <div class="problem-title">24x 14 inch pothole</div>
-          <div class="problem-time">13:24 today, last updated 13:49 today</div>
-        </div>
-        <img src="C:\Users\suham\Downloads\CityFix Pictures\pothole.jpg" class="problem-image" alt="Pothole">
-      </div>
-
-      <div class="problem-item" data-problem-id="2">
-        <div class="problem-info">
-          <div class="problem-title">Footbridge broken</div>
-          <div class="problem-time">13:22 today</div>
-        </div>
-        <img src="C:\Users\suham\Downloads\CityFix Pictures\footbridge.jpeg" class="problem-image" alt="Broken Footbridge">
-      </div>
-
-      <div class="problem-item" data-problem-id="3">
-        <div class="problem-info">
-          <div class="problem-title">Water constantly flooding in the road here</div>
-          <div class="problem-time">13:21 today</div>
-        </div>
-        <img src="C:\Users\suham\Downloads\CityFix Pictures\flooded road.jpg" class="problem-image" alt="Flooding Road">
-      </div>
-
-      <div class="problem-item" data-problem-id="4">
-        <div class="problem-info">
-          <div class="problem-title">Garbage Collector late by 1 week</div>
-          <div class="problem-time">13:21 today</div>
-        </div>
-        <img src="C:\Users\suham\Downloads\CityFix Pictures\garbage.jpg" class="problem-image" alt="Abandoned Tent">
-      </div>
-
-      <div class="problem-item" data-problem-id="5">
-        <div class="problem-info">
-          <div class="problem-title">Littering the road side</div>
-          <div class="problem-time">13:20 today, last updated 13:21 today</div>
-        </div>
-        <img src="C:\Users\suham\Downloads\CityFix Pictures\rubbish.jpg" class="problem-image" alt="Large Road Hole">
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How to report a problem</h2>
+      <div class="steps">
+        <div class="step"><div class="step-number">1</div><h3>Enter location</h3><p>Provide the exact location.</p></div>
+        <div class="step"><div class="step-number">2</div><h3>Locate on map</h3><p>Pinpoint the issue on our interactive map.</p></div>
+        <div class="step"><div class="step-number">3</div><h3>Add details</h3><p>Describe the problem and attach photos.</p></div>
+        <div class="step"><div class="step-number">4</div><h3>Notify council</h3><p>We forward your report to authorities.</p></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
+  <section class="stats">
+    <div class="container stats-container">
+    <div class="stat-item">
+  <div class="stat-number">48 hrs</div>
+  <p>Average Resolution Time</p>
+</div>
+<div class="stat-item">
+  <div class="stat-number">92%</div>
+  <p>Issues Resolved on Time</p>
+</div>
+<div class="stat-item">
+  <div class="stat-number">25</div>
+  <p>Cities Covered</p>
+</div>
 
-    <!-- Info Sections -->
-    <section class="info-sections">
-        <div class="container info-container">
-            <div class="info-box">
-                <h3>For Citizens</h3>
-                <p>Need to report a problem in your local area? Learn all about CityFix, how it works and what happens to your report once you've made it.</p>
-                <button id="citizenLearnMore">Learn More</button>
+    </div>
+  </section>
+
+  <section class="recent-problems">
+    <div class="container">
+      <h2 class="section-title">Recently Reported Problems</h2>
+      <div class="problems-list" id="problemsList"></div>
+    </div>
+  </section>
+
+ 
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 CityFix - Sri Lanka. Together we build cleaner, safer cities.</p>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE_URL = "http://localhost:8080/api/reports/";
+    const UPLOADS_BASE_URL = "http://localhost:8080/api/reports/uploads/reports";
+    const PLACEHOLDER_IMG = "https://via.placeholder.com/90x70?text=No+Image";
+    const MAX_SHOW = 4;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadRecentReports();
+     
+    });
+
+    async function loadRecentReports(){
+      const list = document.getElementById("problemsList");
+      list.innerHTML = "<p style='text-align:center;'>Loading recent reports...</p>";
+      try {
+        const response = await fetch(API_BASE_URL);
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        const reports = await response.json();
+        if(!Array.isArray(reports) || reports.length === 0) {
+          list.innerHTML = "<p style='text-align:center;'>No recent reports found.</p>"; return;
+        }
+        list.innerHTML = "";
+        reports.slice(-MAX_SHOW).reverse().forEach(r=>{
+          const image = r.photos ? `${UPLOADS_BASE_URL}/${encodeURIComponent(r.photos.split(",")[0])}` : PLACEHOLDER_IMG;
+          const item = document.createElement("div");
+          item.className = "problem-item";
+          item.innerHTML = `
+            <div class="problem-info">
+              <div class="problem-title">${r.problemTitle||"Untitled Problem"}</div>
+              <div><b>Category:</b> ${r.problemCategory||"Unknown"}</div>
+              <div><b>Status:</b> ${r.status||"New"}</div>
+              <div><b>Severity:</b> ${r.severity||"N/A"}</div>
+              <div class="problem-time"><b>Date:</b> ${r.submittedDate? new Date(r.submittedDate).toLocaleDateString():"Unknown"}</div>
             </div>
-            <div class="info-box">
-                <h3>For Councils</h3>
-                <p>Find answers to frequently asked questions about how CityFix works for municipal councils and discover integration options.</p>
-                <button id="councilLearnMore">Learn More</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 CityFix - Sri Lanka. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script>
-        // Navigation functionality
-        document.getElementById('signInLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Sign In page would open here');
-            // In a real implementation, this would navigate to the sign in page
+            <img src="${image}" class="problem-image" onerror="this.src='${PLACEHOLDER_IMG}'" />
+          `;
+          item.addEventListener("click",()=>alert(`Opening details for report #${r.id}`));
+          list.appendChild(item);
         });
-
-        document.getElementById('allReportsLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('All Reports page would open here');
-            // In a real implementation, this would navigate to the all reports page
-        });
-
-        document.getElementById('localReportsLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Local Reports page would open here');
-            // In a real implementation, this would navigate to the local reports page
-        });
-
-        document.getElementById('helpLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Help page would open here');
-            // In a real implementation, this would navigate to the help page
-        });
-
-        // Go button functionality
-        document.getElementById('goButton').addEventListener('click', function() {
-            const searchInput = document.querySelector('.search-box input');
-            if (searchInput.value.trim() === '') {
-                alert('Please enter a location');
-            } else {
-                alert(`Searching for problems near: ${searchInput.value}`);
-                // In a real implementation, this would perform the search
-            }
-        });
-
-        // Use current location functionality
-        document.querySelector('.use-location').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    alert(`Using your current location: ${position.coords.latitude}, ${position.coords.longitude}`);
-                    // In a real implementation, this would use the coordinates to search
-                }, function(error) {
-                    alert('Unable to retrieve your location. Please enter a location manually.');
-                });
-            } else {
-                alert('Geolocation is not supported by this browser. Please enter a location manually.');
-            }
-        });
-
-        // Problem item click functionality
-        const problemItems = document.querySelectorAll('.problem-item');
-        problemItems.forEach(item => {
-            item.addEventListener('click', function() {
-                const problemId = this.getAttribute('data-problem-id');
-                alert(`Opening details for problem #${problemId}`);
-                // In a real implementation, this would navigate to the problem details page
-            });
-        });
-
-        // Learn More buttons functionality
-        document.getElementById('citizenLearnMore').addEventListener('click', function() {
-            alert('Opening Citizen Information page');
-            // In a real implementation, this would navigate to the citizen information page
-        });
-
-        document.getElementById('councilLearnMore').addEventListener('click', function() {
-            alert('Opening Council Information page');
-            // In a real implementation, this would navigate to the council information page
-        });
-    </script>
+      } catch(err){
+        console.error(err);
+        list.innerHTML="<p style='text-align:center;color:red;'>Failed to load recent reports.</p>";
+      }
+    }
+  </script>
 </body>
 </html>

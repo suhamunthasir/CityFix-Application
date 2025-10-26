@@ -74,6 +74,11 @@
         nav ul li a:hover {
             background-color: #555;
         }
+          nav ul li a.active {
+        background-color: #555;
+        color: white;
+        font-weight: bold;
+    }
         
         /* Page Header */
         .page-header {
@@ -269,7 +274,7 @@
         }
         
         .status-in-progress {
-            background-color: #a29bfe;
+            background-color: #dfcdf5;
             color: #2d3436;
         }
         
@@ -279,10 +284,16 @@
         }
         
         .status-closed {
-            background-color: #dfe6e9;
-            color: #636e72;
+            background-color: #cce2cf;
+            color: #63726a;
         }
-        
+        .status-pending {
+        color: #545252;           /* text color */
+        background-color: #da9298; /* light pink bg */
+        padding: 2px 6px;
+        border-radius: 4px;
+        }
+            
         /* Map View */
         .map-view {
             display: none;
@@ -385,7 +396,7 @@
                     <li><a href="signin.html">Sign In</a></li>
 
                     <li><a href="#" class="active">All Reports</a></li>
-                    <li><a href="localReport.html">Local Reports</a></li>
+                    <li><a href="localReport.html">Announcements</a></li>
                     <li><a href="help.html">Help</a></li>
                 </ul>
             </nav>
@@ -410,58 +421,29 @@
                 <div class="filter-group">
                     <h3>Status</h3>
                     <div class="filter-option">
-                        <input type="checkbox" id="status-open" checked>
-                        <label for="status-open">Open</label>
+                        <input type="checkbox" id="status-New" >
+                        <label for="status-New">New</label>
                     </div>
                     <div class="filter-option">
-                        <input type="checkbox" id="status-in-progress" checked>
-                        <label for="status-in-progress">In Progress</label>
+                        <input type="checkbox" id="status-Pending" >
+                        <label for="status-Pending">Pending</label>
                     </div>
                     <div class="filter-option">
-                        <input type="checkbox" id="status-fixed" checked>
-                        <label for="status-fixed">Fixed</label>
+                        <input type="checkbox" id="status-In-Progress" >
+                        <label for="status-In-Progress">In Progress</label>
                     </div>
                     <div class="filter-option">
-                        <input type="checkbox" id="status-closed">
-                        <label for="status-closed">Closed</label>
+                        <input type="checkbox" id="status-Resolved">
+                        <label for="status-Resolved">Resolved</label>
                     </div>
                 </div>
                 
-                <div class="filter-group">
+                <div class="filter-group" id="department-filters">
                     <h3>Category</h3>
-                    <div class="filter-option">
-                        <input type="checkbox" id="category-potholes" checked>
-                        <label for="category-potholes">Potholes</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="category-streetlights" checked>
-                        <label for="category-streetlights">Street Lights</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="category-garbage" checked>
-                        <label for="category-garbage">Garbage Collection</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="category-damage" checked>
-                        <label for="category-damage">Damaged Property</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="category-flooding" checked>
-                        <label for="category-flooding">Flooding</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="checkbox" id="category-other" checked>
-                        <label for="category-other">Other Issues</label>
-                    </div>
+                    
                 </div>
                 
-                <div class="filter-group">
-                    <h3>Location</h3>
-                    <div class="filter-option">
-                        <input type="text" placeholder="Enter location" style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
-                    </div>
-                </div>
-                
+             
                 <div class="filter-group">
                     <h3>Date Range</h3>
                     <div class="filter-option">
@@ -490,97 +472,15 @@
                             <option value="newest">Newest First</option>
                             <option value="oldest">Oldest First</option>
                             <option value="updated">Recently Updated</option>
-                            <option value="nearby">Nearby First</option>
+                          
                         </select>
                     </div>
                 </div>
                 
                 <!-- List View -->
                 <div id="list-view-content">
-                    <!-- Report Item 1 -->
-                    <div class="report-item">
-                        <div class="report-image">
-                            <img src="C:\Users\suham\Downloads\CityFix Pictures\pothole.jpg" alt="Pothole">
-                        </div>
-                        <div class="report-content">
-                            <h3 class="report-title">Large pothole on Galle Road, Colombo 03</h3>
-                            <div class="report-meta">
-                                <span>Reported: 2 hours ago</span>
-                                <span>Location: Colombo 03</span>
-                                <span>Category: Potholes</span>
-                            </div>
-                            <p class="report-description">A large pothole has developed near the junction of Galle Road and Hospital Lane. It's causing traffic delays and is dangerous for motorcyclists.</p>
-                            <span class="report-status status-open">Open</span>
-                        </div>
-                    </div>
+                   
                     
-                    <!-- Report Item 2 -->
-                    <div class="report-item">
-                        <div class="report-image">
-                            <img src="C:\Users\suham\Downloads\CityFix Pictures\streetlight.jpg" alt="Street Light">
-                        </div>
-                        <div class="report-content">
-                            <h3 class="report-title">Street light not working on Park Street, Colombo 02</h3>
-                            <div class="report-meta">
-                                <span>Reported: 1 day ago</span>
-                                <span>Location: Colombo 02</span>
-                                <span>Category: Street Lights</span>
-                            </div>
-                            <p class="report-description">The street light near the Park Street junction has been out for over a week, making the area unsafe at night.</p>
-                            <span class="report-status status-in-progress">In Progress</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Report Item 3 -->
-                    <div class="report-item">
-                        <div class="report-image">
-                            <img src="C:\Users\suham\Downloads\CityFix Pictures\garbage.jpg" alt="Garbage">
-                        </div>
-                        <div class="report-content">
-                            <h3 class="report-title">Garbage not collected for 5 days in Kandy</h3>
-                            <div class="report-meta">
-                                <span>Reported: 3 days ago</span>
-                                <span>Location: Kandy</span>
-                                <span>Category: Garbage Collection</span>
-                            </div>
-                            <p class="report-description">Garbage has been piling up on Dalada Veediya for 5 days without collection, causing odor and attracting animals.</p>
-                            <span class="report-status status-open">Open</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Report Item 4 -->
-                    <div class="report-item">
-                        <div class="report-image">
-                            <img src="C:\Users\suham\Downloads\CityFix Pictures\footbridge broken.jpg" alt="Damaged Property">
-                        </div>
-                        <div class="report-content">
-                            <h3 class="report-title">Broken footbridge in Dehiwala</h3>
-                            <div class="report-meta">
-                                <span>Reported: 5 days ago</span>
-                                <span>Location: Dehiwala</span>
-                                <span>Category: Damaged Property</span>
-                            </div>
-                            <p class="report-description">The footbridge near the Dehiwala railway station has broken handrails, posing a safety risk to pedestrians.</p>
-                            <span class="report-status status-fixed">Fixed</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Report Item 5 -->
-                    <div class="report-item">
-                        <div class="report-image">
-                            <img src="C:\Users\suham\Downloads\CityFix Pictures\flooded road.jpg" alt="Flooding">
-                        </div>
-                        <div class="report-content">
-                            <h3 class="report-title">Road flooding during rain in Negombo</h3>
-                            <div class="report-meta">
-                                <span>Reported: 1 week ago</span>
-                                <span>Location: Negombo</span>
-                                <span>Category: Flooding</span>
-                            </div>
-                            <p class="report-description">The road near St. Mary's Church floods even during light rain, making it difficult for pedestrians and vehicles.</p>
-                            <span class="report-status status-in-progress">In Progress</span>
-                        </div>
-                    </div>
                 </div>
                 
                 <!-- Map View -->
@@ -591,11 +491,7 @@
                 <!-- Pagination -->
                 <div class="pagination">
                     <button class="active">1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>Next</button>
+                   
                 </div>
             </main>
         </div>
@@ -609,123 +505,6 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script>
-        // Toggle between list and map view
-        document.getElementById('list-view').addEventListener('click', function() {
-            document.getElementById('list-view').classList.add('active');
-            document.getElementById('map-view').classList.remove('active');
-            document.getElementById('list-view-content').style.display = 'block';
-            document.getElementById('map-view-content').style.display = 'none';
-        });
-        
-        document.getElementById('map-view').addEventListener('click', function() {
-            document.getElementById('map-view').classList.add('active');
-            document.getElementById('list-view').classList.remove('active');
-            document.getElementById('list-view-content').style.display = 'none';
-            document.getElementById('map-view-content').style.display = 'block';
-            initMap();
-        });
-        
-        // Initialize map (only when needed)
-        function initMap() {
-            // Check if map is already initialized
-            if (document.getElementById('map').hasChildNodes()) return;
-            
-            // Create map centered on Sri Lanka
-            const map = L.map('map').setView([7.8731, 80.7718], 8);
-            
-            // Add tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-            
-            // Add sample markers for reports
-            const reports = [
-                {
-                    position: [6.9271, 79.8612],
-                    title: "Large pothole on Galle Road",
-                    status: "Open",
-                    category: "Potholes"
-                },
-                {
-                    position: [6.9271, 79.8412],
-                    title: "Street light not working",
-                    status: "In Progress",
-                    category: "Street Lights"
-                },
-                {
-                    position: [7.2906, 80.6337],
-                    title: "Garbage not collected",
-                    status: "Open",
-                    category: "Garbage Collection"
-                },
-                {
-                    position: [6.8406, 79.8712],
-                    title: "Broken footbridge",
-                    status: "Fixed",
-                    category: "Damaged Property"
-                },
-                {
-                    position: [7.2086, 79.8356],
-                    title: "Road flooding during rain",
-                    status: "In Progress",
-                    category: "Flooding"
-                }
-            ];
-            
-            // Define status colors
-            const statusColors = {
-                "Open": "#ff9f43",
-                "In Progress": "#a29bfe",
-                "Fixed": "#00b894",
-                "Closed": "#636e72"
-            };
-            
-            // Add markers to map
-            reports.forEach(report => {
-                const marker = L.marker(report.position).addTo(map);
-                marker.bindPopup(`
-                    <strong>${report.title}</strong><br>
-                    Status: <span style="color: ${statusColors[report.status]}">${report.status}</span><br>
-                    Category: ${report.category}
-                `);
-            });
-        }
-        
-        // Report item click functionality
-        const reportItems = document.querySelectorAll('.report-item');
-        reportItems.forEach(item => {
-            item.addEventListener('click', function() {
-                alert('Opening report details page');
-                // In a real implementation, this would navigate to the report details page
-            });
-        });
-        
-        // Filter button functionality
-        document.querySelector('.filter-button').addEventListener('click', function() {
-            alert('Filters applied!');
-            // In a real implementation, this would filter the reports
-        });
-        
-        // Sort functionality
-        document.getElementById('sort-by').addEventListener('change', function() {
-            alert(`Sorting by: ${this.value}`);
-            // In a real implementation, this would sort the reports
-        });
-        
-        // Pagination functionality
-        const paginationButtons = document.querySelectorAll('.pagination button');
-        paginationButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                if (this.textContent === 'Next') {
-                    alert('Loading next page...');
-                } else {
-                    paginationButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    alert(`Loading page ${this.textContent}...`);
-                }
-            });
-        });
-    </script>
+    <script src="all_reports.js"></script>
 </body>
 </html>
