@@ -1,3 +1,17 @@
+/* =========================================================
+   Departments UI — Cleaned & Corrected (by Rukaiya)
+   Requirements (HTML IDs):
+   - departmentsGrid, emptyState
+   - addDepartmentForm, departmentForm, modalDeptForm
+   - searchDept
+   - departmentModal
+   - Buttons: addDepartmentBtn, cancelDeptBtn, emptyStateAddBtn, closeDeptModalBtn
+   - Form inputs:
+     * Create:  deptName, deptDescription, deptEmail, deptLogo, logoPreview
+     * Modal:   modalDeptId, modalDeptName, modalDeptDescription, modalDeptEmail, modalDeptLogo, modalLogoPreview
+   - Tailwind / Material Symbols optional
+   ========================================================= */
+
 /* ---------- CONFIG ---------- */
 // Base URL for API calls - update this to match your backend URL
 const API_BASE_URL = "http://localhost:8080/api/departments";
