@@ -539,6 +539,21 @@ Keep layout exactly as user provided. Added a modal for viewing/updating reports
         .modal .modal-body .col { display:flex; flex-direction:column; gap:0.5rem }
         .modal .modal-footer { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem }
         .readonly { background:#f2f2f2 }
+
+        /* Chatbot widget styles (consistent with your site) */
+#chatbot-widget { position: fixed; bottom: 30px; right: 30px; z-index: 2000; font-family: 'Segoe UI', Tahoma, sans-serif; }
+#chatbot-button { background:#e67e22;color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.2); }
+#chatbot-box { display:none; width:360px; height:520px; border-radius:10px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.3); position:absolute; bottom:70px; right:0; background:#fff; flex-direction:column; }
+#chatbot-header { background:#333;color:#fff;padding:12px 12px; display:flex; justify-content:space-between; align-items:center; }
+#chatbot-messages { padding:12px; height: 380px; overflow-y:auto; background:#f8f8f8; display:flex; flex-direction:column; gap:8px; }
+.chatbot-msg { max-width:80%; padding:10px 12px; border-radius:8px; }
+.chatbot-msg.user { background:#e67e22;color:#fff; align-self:flex-end; }
+.chatbot-msg.bot { background:#e0e0e0;color:#222; align-self:flex-start; }
+#chatbot-input-area { display:flex; border-top:1px solid #e6e6e6; padding:8px; gap:8px; }
+#chatbot-input { flex:1; padding:8px 10px; border-radius:6px; border:1px solid #ddd; outline:none; }
+#chatbot-send { background:#e67e22;color:#fff;border:none;padding:8px 14px;border-radius:6px; cursor:pointer; }
+#chatbot-send:hover { background:#d35400; }
+
     </style>
 </head>
 <body>
@@ -673,6 +688,31 @@ Keep layout exactly as user provided. Added a modal for viewing/updating reports
             </div>
         </div>
     </div>
+
+    <!-- Chatbot Widget (place before </body>) -->
+<div id="chatbot-widget">
+  <div id="chatbot-button" title="CityFix Assistant">💬</div>
+
+  <div id="chatbot-box" role="dialog" aria-hidden="true" aria-label="CityFix Assistant">
+    <div id="chatbot-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:34px;height:34px;border-radius:6px;background:#e67e22;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">CF</div>
+        <div>
+          <div style="font-weight:700">CityFix Assistant</div>
+          <div style="font-size:12px;color:#ddd">Ask about your reports</div>
+        </div>
+      </div>
+      <button id="chatbot-close" class="action-button" style="background:none;border:none;color:white">✕</button>
+    </div>
+
+    <div id="chatbot-messages" aria-live="polite"></div>
+
+    <div id="chatbot-input-area">
+      <input id="chatbot-input" type="text" placeholder="e.g., How many reports are pending?" />
+      <button id="chatbot-send" class="action-button primary">Send</button>
+    </div>
+  </div>
+</div>
 
     <!-- Footer -->
     <footer>

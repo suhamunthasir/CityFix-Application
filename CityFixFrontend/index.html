@@ -220,49 +220,71 @@ footer p {
   </footer>
 
   <script>
-    const API_BASE_URL = "http://localhost:8080/api/reports/";
-    const UPLOADS_BASE_URL = "http://localhost:8080/api/reports/uploads/reports";
-    const PLACEHOLDER_IMG = "https://via.placeholder.com/90x70?text=No+Image";
-    const MAX_SHOW = 4;
+  const API_BASE_URL = "http://localhost:8080/api/reports/";
+  const UPLOADS_BASE_URL = "http://localhost:8080/api/reports/uploads/reports";
+  const PLACEHOLDER_IMG = "https://via.placeholder.com/90x70?text=No+Image";
+  const MAX_SHOW = 4; // Show top 4 newest reports
 
-    document.addEventListener("DOMContentLoaded", () => {
-      loadRecentReports();
-     
-    });
+  let lastReportIds = []; // Track currently displayed report IDs
 
-    async function loadRecentReports(){
-      const list = document.getElementById("problemsList");
-      list.innerHTML = "<p style='text-align:center;'>Loading recent reports...</p>";
-      try {
-        const response = await fetch(API_BASE_URL);
-        if(!response.ok) throw new Error(`HTTP ${response.status}`);
-        const reports = await response.json();
-        if(!Array.isArray(reports) || reports.length === 0) {
-          list.innerHTML = "<p style='text-align:center;'>No recent reports found.</p>"; return;
-        }
-        list.innerHTML = "";
-        reports.slice(-MAX_SHOW).reverse().forEach(r=>{
-          const image = r.photos ? `${UPLOADS_BASE_URL}/${encodeURIComponent(r.photos.split(",")[0])}` : PLACEHOLDER_IMG;
-          const item = document.createElement("div");
-          item.className = "problem-item";
-          item.innerHTML = `
-            <div class="problem-info">
-              <div class="problem-title">${r.problemTitle||"Untitled Problem"}</div>
-              <div><b>Category:</b> ${r.problemCategory||"Unknown"}</div>
-              <div><b>Status:</b> ${r.status||"New"}</div>
-              <div><b>Severity:</b> ${r.severity||"N/A"}</div>
-              <div class="problem-time"><b>Date:</b> ${r.submittedDate? new Date(r.submittedDate).toLocaleDateString():"Unknown"}</div>
-            </div>
-            <img src="${image}" class="problem-image" onerror="this.src='${PLACEHOLDER_IMG}'" />
-          `;
-          item.addEventListener("click",()=>alert(`Opening details for report #${r.id}`));
-          list.appendChild(item);
-        });
-      } catch(err){
-        console.error(err);
-        list.innerHTML="<p style='text-align:center;color:red;'>Failed to load recent reports.</p>";
+  document.addEventListener("DOMContentLoaded", () => {
+    loadRecentReports();
+    setInterval(loadRecentReports, 60000); // Refresh every 60 seconds
+  });
+
+  async function loadRecentReports() {
+    const list = document.getElementById("problemsList");
+    list.innerHTML = "<p style='text-align:center;'>Loading recent reports...</p>";
+
+    try {
+      const response = await fetch(API_BASE_URL);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const reports = await response.json();
+
+      if (!Array.isArray(reports) || reports.length === 0) {
+        list.innerHTML = "<p style='text-align:center;'>No recent reports found.</p>";
+        return;
       }
+
+      // Sort by submittedDate descending (newest first)
+      const sortedReports = reports
+        .sort((a, b) => new Date(b.submittedDate) - new Date(a.submittedDate))
+        .slice(0, MAX_SHOW); // Take top MAX_SHOW
+
+      // Only update if the newest reports changed
+      const currentIds = sortedReports.map(r => r.id);
+      if (JSON.stringify(currentIds) === JSON.stringify(lastReportIds)) return;
+      lastReportIds = currentIds;
+
+      list.innerHTML = ""; // Clear current list
+
+      sortedReports.forEach(r => {
+        const image = r.photos
+          ? `${UPLOADS_BASE_URL}/${encodeURIComponent(r.photos.split(",")[0])}`
+          : PLACEHOLDER_IMG;
+
+        const item = document.createElement("div");
+        item.className = "problem-item";
+        item.innerHTML = `
+          <div class="problem-info">
+            <div class="problem-title">${r.problemTitle || "Untitled Problem"}</div>
+            <div><b>Category:</b> ${r.problemCategory || "Unknown"}</div>
+            <div><b>Status:</b> ${r.status || "New"}</div>
+            <div><b>Severity:</b> ${r.severity || "N/A"}</div>
+            <div class="problem-time"><b>Date:</b> ${r.submittedDate ? new Date(r.submittedDate).toLocaleDateString() : "Unknown"}</div>
+          </div>
+          <img src="${image}" class="problem-image" onerror="this.src='${PLACEHOLDER_IMG}'" />
+        `;
+        item.addEventListener("click", () => alert(`Opening details for report #${r.id}`));
+        list.appendChild(item);
+      });
+
+    } catch (err) {
+      console.error(err);
+      list.innerHTML = "<p style='text-align:center;color:red;'>Failed to load recent reports.</p>";
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>

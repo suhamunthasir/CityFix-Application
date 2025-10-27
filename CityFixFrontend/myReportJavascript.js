@@ -348,3 +348,74 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await fetchReports();
 });
+
+
+(function(){
+  const CHAT_API = "http://localhost:8080/api/chatbot";
+  const botBtn = document.getElementById('chatbot-button');
+  const botBox = document.getElementById('chatbot-box');
+  const botClose = document.getElementById('chatbot-close');
+  const messages = document.getElementById('chatbot-messages');
+  const input = document.getElementById('chatbot-input');
+  const sendBtn = document.getElementById('chatbot-send');
+
+  function append(role, text) {
+    const d = document.createElement('div');
+    d.className = 'chatbot-msg ' + (role === 'user' ? 'user' : 'bot');
+    d.textContent = text;
+    messages.appendChild(d);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  botBtn.addEventListener('click', () => {
+    if (!localStorage.getItem('loggedInCitizen')) {
+      alert('Please login to use the assistant.');
+      return;
+    }
+    botBox.style.display = botBox.style.display === 'flex' ? 'none' : 'flex';
+    botBox.setAttribute('aria-hidden', botBox.style.display === 'none');
+  });
+  botClose.addEventListener('click', () => { botBox.style.display = 'none'; });
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    const citizen = JSON.parse(localStorage.getItem('loggedInCitizen') || 'null');
+    if (!citizen || !citizen.id) { alert('Please login'); return; }
+
+    append('user', text);
+    input.value = '';
+    append('bot', 'Thinking...');
+
+    try {
+      const res = await fetch(CHAT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, citizenId: citizen.id })
+      });
+      const data = await res.json();
+      // remove the "Thinking..." message
+      const last = Array.from(messages.querySelectorAll('.chatbot-msg')).pop();
+      if (last && last.textContent === 'Thinking...') last.remove();
+
+      if (data && data.reply) {
+        append('bot', data.reply);
+      } else if (data && data.error) {
+        append('bot', 'Error: ' + data.error);
+      } else {
+        append('bot', 'No response from assistant.');
+      }
+    } catch (e) {
+      // remove the "Thinking..." message
+      const last = Array.from(messages.querySelectorAll('.chatbot-msg')).pop();
+      if (last && last.textContent === 'Thinking...') last.remove();
+
+      append('bot', 'Failed to reach assistant.');
+      console.error(e);
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+})();
+
